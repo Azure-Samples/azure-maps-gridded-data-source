@@ -1,13 +1,7 @@
-## [project-title] Changelog
+## Azure Maps Gridded Data Source module Changelog
 
-<a name="x.y.z"></a>
-# x.y.z (yyyy-mm-dd)
+<a name="0.0.1"></a>
+# 0.0.1 (2020-10-1)
 
 *Features*
-* ...
-
-*Bug Fixes*
-* ...
-
-*Breaking Changes*
-* ...
+* Initial release of gridded data source which includes 6 different grid types with pixel accuracy.
