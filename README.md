@@ -12,6 +12,7 @@ products:
 # Azure Maps Gridded Data Source module
 
 A module for the Azure Maps Web SDK that provides a data source that clusters data points into cells of a grid area.
+
 This operation is also known by many names such as tessellations, data binning, or hex bins. 
 
 A couple of the key features of this module:
