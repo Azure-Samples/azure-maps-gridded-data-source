@@ -29,8 +29,8 @@ A couple of the key features of this module:
 | Pointy hexagon | ![pointy hexagon grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/pointyhexagon.png) | A haxagon grid where the top of the hexagon is pointy. |
 | Square | ![square grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/square.png) | A sguare grid. |
 | Triangle | ![triangle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/triangle.png) | A triangular grid. |
-| Circle | ![circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/circle.png) | A square grid where cells are converted into circles. The circle does not cover the entire are the cell represents, but does include all points that would fall within the specified grid cell. |
-| Hexagon circle  | ![hexagon circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/hexcircle.png) | A haxagon grid where cells are converted into circles. The circle does not cover the entire are the cell represents, but does include all points that would fall within the specified grid cell. |
+| Circle | ![circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/circle.png) | A square grid where cells are converted into circles. The circle does not cover the entire area the cell represents, but does include all points that would fall within the specified grid cell. |
+| Hexagon circle  | ![hexagon circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/hexcircle.png) | A haxagon grid where cells are converted into circles. The circle does not cover the entire area the cell represents, but does include all points that would fall within the specified grid cell. |
 
 **Credit**
 
