@@ -60,6 +60,7 @@ See the [documentation](https://github.com/Azure-Samples/azure-maps-gridded-data
 - Use of web workers for large data sets.
 - Offloading calculations to WebGL.
 - Option for geospatially accurate grids.
+- Polygon mask to clip to.
 
 ## Related Projects
 
