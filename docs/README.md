@@ -1,4 +1,4 @@
 # Azure Maps Gridded Data Source Documentation
 
-* [API Interface](api-interface.md)
+* [API Reference](api-reference.md)
 * [Supported Expressions](supported-expressions.md)

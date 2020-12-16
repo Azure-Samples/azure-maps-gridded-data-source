@@ -1,4 +1,4 @@
-import atlas, * as azmaps from 'azure-maps-control';
+import * as azmaps from 'azure-maps-control';
 import { GridType } from '../Enums/GridType';
 import { GridMath, GridInfo } from '../helpers/GridMath';
 
