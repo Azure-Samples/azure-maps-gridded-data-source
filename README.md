@@ -46,13 +46,13 @@ See the [documentation](https://github.com/Azure-Samples/azure-maps-gridded-data
 
 ## Samples
 
-[Animate a choropleth map](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Extruded%20gridded%20data%20source)
+[Extruded gridded data source](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Extruded%20gridded%20data%20source)
 <br/>[<img src="https://github.com/Azure-Samples/AzureMapsCodeSamples/raw/master/AzureMapsCodeSamples/SiteResources/screenshots/Extruded-gridded-data-source.jpg" height="200px">](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Extruded%20gridded%20data%20source)
 
-[Animate a choropleth map](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Show%20points%20of%20gridded%20data%20source)
+[Show points of gridded data source](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Show%20points%20of%20gridded%20data%20source)
 <br/>[<img src="https://github.com/Azure-Samples/AzureMapsCodeSamples/raw/master/AzureMapsCodeSamples/SiteResources/screenshots/Show-points-of-gridded-data-source.jpg" height="200px">](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Show%20points%20of%20gridded%20data%20source)
 
-[Animate a choropleth map](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Gridded%20data%20source%20options)
+[Gridded data source options](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Gridded%20data%20source%20options)
 <br/>[<img src="https://github.com/Azure-Samples/AzureMapsCodeSamples/raw/master/AzureMapsCodeSamples/SiteResources/screenshots/Gridded-data-source-options.jpg" height="200px">](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Gridded%20data%20source%20options)
 
 ## Ideas for enhancements
