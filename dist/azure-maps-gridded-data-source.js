@@ -207,9 +207,10 @@ MIT License
     }());
     var ComparisonExp = /** @class */ (function () {
         function ComparisonExp(comp, e1, e2) {
-            this._c = comp;
-            this._e1 = e1;
-            this._e2 = e2;
+            var self = this;
+            self._c = comp;
+            self._e1 = e1;
+            self._e2 = e2;
         }
         ComparisonExp.parse = function (exp) {
             if (exp.length >= 3) {
@@ -218,9 +219,10 @@ MIT License
             throw "Invalid '" + exp[1] + "' expression.";
         };
         ComparisonExp.prototype.eval = function (val) {
-            var v1 = this._e1.eval(val);
-            var v2 = this._e2.eval(val);
-            switch (this._c) {
+            var self = this;
+            var v1 = self._e1.eval(val);
+            var v2 = self._e2.eval(val);
+            switch (self._c) {
                 case '<':
                     return v1 < v2;
                 case '<=':
@@ -261,14 +263,16 @@ MIT License
             throw "Invalid '" + exp[0] + "' expression.";
         };
         MathExp.prototype.eval = function (val) {
-            var v1 = (this._e.length >= 1) ? this._getValue(val, this._e[0]) : 0;
-            var v2 = (this._e.length >= 2) ? this._getValue(val, this._e[1]) : 0;
-            switch (this._o) {
+            var self = this;
+            var math = Math;
+            var v1 = (self._e.length >= 1) ? self._getValue(val, self._e[0]) : 0;
+            var v2 = (self._e.length >= 2) ? self._getValue(val, self._e[1]) : 0;
+            switch (self._o) {
                 case '+':
                 case '*':
                 case 'min':
                 case 'max':
-                    this._evalArray(val);
+                    self._evalArray(val);
                     break;
                 case '-':
                     return v2 - v1;
@@ -277,66 +281,66 @@ MIT License
                 case '%':
                     return v1 % v2;
                 case '^':
-                    return Math.pow(v1, v2);
+                    return math.pow(v1, v2);
                 case 'abs':
-                    return Math.abs(v1);
+                    return math.abs(v1);
                 case 'acos':
-                    return Math.acos(v1);
+                    return math.acos(v1);
                 case 'asin':
-                    return Math.asin(v1);
+                    return math.asin(v1);
                 case 'atan':
-                    return Math.atan(v1);
+                    return math.atan(v1);
                 case 'ceil':
-                    return Math.ceil(v1);
+                    return math.ceil(v1);
                 case 'cos':
-                    return Math.cos(v1);
+                    return math.cos(v1);
                 case 'e':
-                    return Math.exp(v1);
+                    return math.exp(v1);
                 case 'floor':
-                    return Math.floor(v1);
+                    return math.floor(v1);
                 case 'ln':
-                    return Math.log(v1);
+                    return math.log(v1);
                 case 'ln2':
-                    return Math.LN2;
+                    return math.LN2;
                 case 'log10':
-                    return Math.log(v1) / Math.LN10;
+                    return math.log(v1) / math.LN10;
                 case 'log2':
-                    return Math.log(v1) / Math.LN2;
+                    return math.log(v1) / math.LN2;
                 case 'pi':
-                    return Math.PI;
+                    return math.PI;
                 case 'round':
-                    return Math.round(v1);
+                    return math.round(v1);
                 case 'sin':
-                    return Math.sin(v1);
+                    return math.sin(v1);
                 case 'sqrt':
-                    return Math.sqrt(v1);
+                    return math.sqrt(v1);
                 case 'tan':
-                    return Math.tan(v1);
+                    return math.tan(v1);
             }
-            throw "Invalid '" + this._o + "' expression.";
+            throw "Invalid '" + self._o + "' expression.";
         };
         MathExp.prototype._evalArray = function (val) {
-            var _this = this;
+            var self = this;
             var f;
             var init = 0;
-            switch (this._o) {
+            switch (self._o) {
                 case '+':
-                    f = function (total, arg) { return total + _this._getValue(val, arg); };
+                    f = function (total, arg) { return total + self._getValue(val, arg); };
                     break;
                 case '*':
                     init = 1;
-                    f = function (total, arg) { return total * _this._getValue(val, arg); };
+                    f = function (total, arg) { return total * self._getValue(val, arg); };
                     break;
                 case 'max':
-                    init = this._getValue(val, this._e[0]);
-                    f = function (total, arg) { return Math.max(total, _this._getValue(val, arg)); };
+                    init = self._getValue(val, self._e[0]);
+                    f = function (total, arg) { return Math.max(total, self._getValue(val, arg)); };
                     break;
                 case 'min':
-                    init = this._getValue(val, this._e[0]);
-                    f = function (total, arg) { return Math.min(total, _this._getValue(val, arg)); };
+                    init = self._getValue(val, self._e[0]);
+                    f = function (total, arg) { return Math.min(total, self._getValue(val, arg)); };
                     break;
             }
-            return this._e.reduce(f, init);
+            return self._e.reduce(f, init);
         };
         MathExp.prototype._getValue = function (val, e) {
             return (typeof e === 'number') ? e : e.eval(val);
@@ -347,9 +351,10 @@ MIT License
     //[operator: string, initialValue: boolean | number, mapExpression: Expression]
     var CellAggregateExpression = /** @class */ (function () {
         function CellAggregateExpression(operator, e, init) {
-            this._o = operator;
-            this._e = e;
-            this._i = init;
+            var self = this;
+            self._o = operator;
+            self._e = e;
+            self._i = init;
         }
         CellAggregateExpression.parse = function (exp) {
             if (exp.length >= 3) {
@@ -365,10 +370,11 @@ MIT License
         };
         CellAggregateExpression.prototype.finalize = function (properties, key) {
             if (properties.aggregateProperties) {
+                var self_1 = this;
                 var val = properties.aggregateProperties[key];
-                var init = this._i;
+                var init = self_1._i;
                 if (typeof init !== 'undefined') {
-                    switch (this._o) {
+                    switch (self_1._o) {
                         case 'max':
                             val = Math.max(init, val);
                             break;
@@ -479,9 +485,10 @@ MIT License
         //['index-of', boolean | string | number, array | string, number]
         'index-of': /** @class */ (function () {
             function IndexOf(value, e, idx) {
-                this._v = value;
-                this._e = e;
-                this._i = idx;
+                var self = this;
+                self._v = value;
+                self._e = e;
+                self._i = idx;
             }
             IndexOf.parse = function (exp) {
                 var idx = 0;
@@ -494,7 +501,8 @@ MIT License
                 throw "Invalid 'index-of' expression.";
             };
             IndexOf.prototype.eval = function (val) {
-                return this._e.eval(val).indexOf(this._v, this._i);
+                var self = this;
+                return self._e.eval(val).indexOf(self._v, self._i);
             };
             return IndexOf;
         }()),
@@ -518,9 +526,10 @@ MIT License
         //['slice', array | string, number, number]
         slice: /** @class */ (function () {
             function Slice(value, start, end) {
-                this._v = value;
-                this._s = start;
-                this._e = end;
+                var self = this;
+                self._v = value;
+                self._s = start;
+                self._e = end;
             }
             Slice.parse = function (exp) {
                 var idx;
@@ -533,7 +542,8 @@ MIT License
                 throw "Invalid 'index-of' expression.";
             };
             Slice.prototype.eval = function (val) {
-                return this._v.eval(val).slice(this._s, this._e);
+                var self = this;
+                return self._v.eval(val).slice(self._s, self._e);
             };
             return Slice;
         }()),
@@ -666,9 +676,10 @@ MIT License
         */
         case: /** @class */ (function () {
             function Case(conditions, outputs, fallback) {
-                this._e = conditions;
-                this._o = outputs;
-                this._f = fallback;
+                var self = this;
+                self._e = conditions;
+                self._o = outputs;
+                self._f = fallback;
             }
             Case.parse = function (exp) {
                 if (exp.length >= 3 && exp.length % 2 === 0) {
@@ -683,14 +694,15 @@ MIT License
                 throw "Invalid 'case' expression.";
             };
             Case.prototype.eval = function (val) {
+                var self = this;
                 var c;
-                for (var i = 0, len = this._e.length; i < len; i++) {
-                    c = this._e[i].eval(val);
+                for (var i = 0, len = self._e.length; i < len; i++) {
+                    c = self._e[i].eval(val);
                     if (c) {
-                        return this._o[i];
+                        return self._o[i];
                     }
                 }
-                return this._f;
+                return self._f;
             };
             return Case;
         }()),
@@ -708,10 +720,11 @@ MIT License
         */
         match: /** @class */ (function () {
             function Match(input, labels, outputs, fallback) {
-                this._i = input;
-                this._l = labels;
-                this._o = outputs;
-                this._f = fallback;
+                var self = this;
+                self._i = input;
+                self._l = labels;
+                self._o = outputs;
+                self._f = fallback;
             }
             Match.parse = function (exp) {
                 if (exp.length >= 5 && exp.length % 2 === 1) {
@@ -727,13 +740,14 @@ MIT License
                 throw "Invalid 'match' expression.";
             };
             Match.prototype.eval = function (val) {
-                var v = this._i.eval(val);
-                for (var i = 0, len = this._l.length; i < len; i++) {
-                    if (this._l[i] === v) {
-                        return this._o[i];
+                var self = this;
+                var v = self._i.eval(val);
+                for (var i = 0, len = self._l.length; i < len; i++) {
+                    if (self._l[i] === v) {
+                        return self._o[i];
                     }
                 }
-                return this._f;
+                return self._f;
             };
             return Match;
         }()),
@@ -750,33 +764,36 @@ MIT License
           ]
         */
         step: /** @class */ (function () {
-            function Step(input, labels, outputs, fallback) {
-                this._i = input;
-                this._l = labels;
-                this._o = outputs;
-                this._f = fallback;
+            function Step(input, labels, outputs) {
+                var self = this;
+                self._i = input;
+                self._l = labels;
+                self._o = outputs;
             }
             Step.parse = function (exp) {
                 if (exp.length >= 5 && exp.length % 2 === 1) {
                     var input = Expression.parse(exp[1]);
                     var labels = [];
                     var outputs = [];
-                    for (var i = 2, len = exp.length; i < len; i += 2) {
+                    //Add the base
+                    outputs.push(exp[2]);
+                    for (var i = 3, len = exp.length; i < len; i += 2) {
                         labels.push(exp[i]);
                         outputs.push(exp[i + 1]);
                     }
-                    return new Step(input, labels, outputs, exp[exp.length - 1]);
+                    return new Step(input, labels, outputs);
                 }
                 throw "Invalid 'step' expression.";
             };
             Step.prototype.eval = function (val) {
-                var v = this._i.eval(val);
-                for (var i = 0, len = this._l.length; i < len; i++) {
-                    if (v <= this._l[i]) {
-                        return this._o[i];
+                var self = this;
+                var v = self._i.eval(val);
+                for (var i = 0, len = self._l.length; i < len; i++) {
+                    if (v <= self._l[i]) {
+                        return self._o[i];
                     }
                 }
-                return this._o[this._o.length - 1];
+                return self._o[self._o.length - 1];
             };
             return Step;
         }()),
@@ -994,17 +1011,18 @@ MIT License
          * @param sqrt3 Constant for square root of 3.
          */
         GridMath._getCellCoord = function (pixel, width, height, gridType, coord, sqrt3) {
+            var self = this;
             //Calculate the cubic coordinate for the data bin that contains the points pixel coordinate.
             switch (gridType) {
                 case 'pointyHexagon':
-                    this._rotatedHexCellCoord(pixel, width, height, coord, sqrt3);
+                    self._rotatedHexCellCoord(pixel, width, height, coord, sqrt3);
                     break;
                 case 'hexagon':
                 case 'hexCircle':
-                    this._hexCellCoord(pixel, width, height, coord, sqrt3);
+                    self._hexCellCoord(pixel, width, height, coord, sqrt3);
                     break;
                 case 'triangle':
-                    this._triangleCellCoord(pixel, width, height, coord, sqrt3);
+                    self._triangleCellCoord(pixel, width, height, coord, sqrt3);
                     break;
                 default:
                     //Square grid system used. 
@@ -1089,12 +1107,14 @@ MIT License
          * @param coord A cubic coordinate object to set the values on.
          */
         GridMath._roundCubeCoord = function (coord) {
-            var rx = Math.round(coord.col);
-            var ry = Math.round(coord.row);
-            var rz = Math.round(coord.z);
-            var x_diff = Math.abs(rx - coord.col);
-            var y_diff = Math.abs(ry - coord.row);
-            var z_diff = Math.abs(rz - coord.z);
+            var mathRound = Math.round;
+            var mathAbs = Math.abs;
+            var rx = mathRound(coord.col);
+            var ry = mathRound(coord.row);
+            var rz = mathRound(coord.z);
+            var x_diff = mathAbs(rx - coord.col);
+            var y_diff = mathAbs(ry - coord.row);
+            var z_diff = mathAbs(rz - coord.z);
             if (x_diff > y_diff && x_diff > z_diff) {
                 rx = -ry - rz;
             }
@@ -1198,23 +1218,25 @@ MIT License
          * @param gridType Grid type
          */
         GridMath._getArcAngles = function (gridType) {
+            var self = GridMath;
+            var calculateArcAngles = self._calculateArcAngles;
             //Precalculate arc angle values for cell polygon generation.
-            var arcAngles = GridMath._arcAngles[gridType];
+            var arcAngles = self._arcAngles[gridType];
             if (!arcAngles) {
                 switch (gridType) {
                     case 'circle':
                     case 'hexCircle':
-                        arcAngles = this._calculateArcAngles(36);
+                        arcAngles = calculateArcAngles(36);
                         break;
                     case 'pointyHexagon':
-                        arcAngles = this._calculateArcAngles(6);
+                        arcAngles = calculateArcAngles(6);
                         break;
                     case 'hexagon':
-                        arcAngles = this._calculateArcAngles(6, 30);
+                        arcAngles = calculateArcAngles(6, 30);
                         break;
                 }
                 //Cache for faste lookups later.
-                GridMath._arcAngles[gridType] = arcAngles;
+                self._arcAngles[gridType] = arcAngles;
             }
             return arcAngles;
         };
@@ -1234,7 +1256,7 @@ MIT License
             var cosArcAngles = [];
             for (var i = 0; i < numNodes; i++) {
                 //Calcualte the arc angle from the first node to the current node in radians.
-                arcAngleRadians = (i * centralAngle + offset) * this.PI_By_180;
+                arcAngleRadians = (i * centralAngle + offset) * GridMath.PI_By_180;
                 sinArcAngles.push(Math.sin(arcAngleRadians));
                 cosArcAngles.push(Math.cos(arcAngleRadians));
             }
@@ -1248,10 +1270,11 @@ MIT License
          * @param pixel Pixel value to convert.
          */
         GridMath._toPosition22 = function (pixel) {
-            var mapSize = this.MapSize22;
+            var mapSize = GridMath.MapSize22;
+            var math = Math;
             return [
                 360 * ((pixel[0] / mapSize) - 0.5),
-                90 - 360 * Math.atan(Math.exp(((pixel[1] / mapSize) - 0.5) * Math.PI * 2)) / Math.PI
+                90 - 360 * math.atan(math.exp(((pixel[1] / mapSize) - 0.5) * math.PI * 2)) / math.PI
             ];
         };
         /**
@@ -1423,6 +1446,7 @@ MIT License
         * @returns A polygon that represents the data bin.
         */
         GridMath.createGridPolygon = function (cellInfo, options, width, height, arcAngles, minCellWidth, scaleExp, scaleMetrics) {
+            var self = GridMath;
             var scale = options.coverage || 1;
             //Get the scale value for the data bin if the user has specified a scale callback function.
             if (options.scaleProperty && scaleMetrics) {
@@ -1434,23 +1458,24 @@ MIT License
                     scale *= s;
                 }
             }
+            var getRegularPolygon = self._getRegularPolygon;
             //Generate the polygon for the data bin.
             switch (options.gridType) {
                 case 'square':
-                    return this._getSquare(cellInfo, width, scale, minCellWidth);
+                    return self._getSquare(cellInfo, width, scale, minCellWidth);
                 case 'hexCircle':
                     //For hex cicles we want the inner radius of the hexagon which is calculated as Math.cos(30 * Math.PI / 180) * pixelRadius = 0.8660254037844387 * pixelRadius
-                    return this._getRegularPolygon(cellInfo, this.InnerRadiusScale * width * 0.5 * scale, arcAngles, minCellWidth);
+                    return getRegularPolygon(cellInfo, self.InnerRadiusScale * width * 0.5 * scale, arcAngles, minCellWidth);
                 case 'triangle':
-                    return this._getTriangle(cellInfo, width, height, scale, minCellWidth);
+                    return self._getTriangle(cellInfo, width, height, scale, minCellWidth);
                 case 'pointyHexagon':
                     //Create a flat hexagon by rotating it 30 degrees.
-                    return this._getRegularPolygon(cellInfo, height * 0.5 * scale, arcAngles, minCellWidth);
+                    return getRegularPolygon(cellInfo, height * 0.5 * scale, arcAngles, minCellWidth);
                 //case 'hexagon':
                 //case 'circle':
                 default:
                     //Create a flat hexagon by rotating it 30 degrees.
-                    return this._getRegularPolygon(cellInfo, width * 0.5 * scale, arcAngles, minCellWidth);
+                    return getRegularPolygon(cellInfo, width * 0.5 * scale, arcAngles, minCellWidth);
             }
         };
         /**
@@ -1461,7 +1486,7 @@ MIT License
          * @returns A data bin polygon that can be displayed on the map.
          */
         GridMath._getRegularPolygon = function (cellInfo, radius, arcAngles, minCellWidth) {
-            var self = this;
+            var self = GridMath;
             //The x and y pixel coordinates of each node.
             var dx;
             var dy;
@@ -1496,13 +1521,14 @@ MIT License
             var bottom = cellInfo._y + scaledHalfWidth;
             var left = Math.max(cellInfo._x - scaledHalfWidth, 0);
             var right = Math.min(cellInfo._x + scaledHalfWidth, self.MapSize22);
+            var toPosition22 = self._toPosition22;
             //Create the four corners of the square.        
             //Convert the pixel values into positions at zoom level 22.
             var pos = [
-                self._toPosition22([left, top]),
-                self._toPosition22([left, bottom]),
-                self._toPosition22([right, bottom]),
-                self._toPosition22([right, top])
+                toPosition22([left, top]),
+                toPosition22([left, bottom]),
+                toPosition22([right, bottom]),
+                toPosition22([right, top])
             ];
             //Close the polygon ring.
             pos.push(pos[0]);
@@ -1517,7 +1543,6 @@ MIT License
          * @param scale Scale to apply to the polygon.
          */
         GridMath._getTriangle = function (cellInfo, width, height, scale, minCellWidth) {
-            var self = this;
             var pos;
             //Cache the x offset to reduce lookups and allow for better minification.
             var offsetX = cellInfo._x;
@@ -1531,34 +1556,37 @@ MIT License
             }
             //Calculate the half with
             var halfWidth = width * 0.5;
-            var mapSize = self.MapSize22;
+            var mapSize = this.MapSize22;
             var x1 = offsetX;
             var x2 = offsetX + halfWidth;
             var x3 = offsetX - halfWidth;
+            var mathMax = Math.max;
+            var mathMin = Math.min;
             //Clamp the triangle coordinates to a single globe and clip at the anti-Meridian. 
             if (x3 < 0) {
-                x1 = Math.max(x1, 0);
-                x2 = Math.max(x2, 0);
-                x3 = Math.max(x3, 0);
+                x1 = mathMax(x1, 0);
+                x2 = mathMax(x2, 0);
+                x3 = mathMax(x3, 0);
             }
             else if (x2 > mapSize) {
-                x1 = Math.min(x1, mapSize);
-                x2 = Math.min(x2, mapSize);
-                x3 = Math.min(x3, mapSize);
+                x1 = mathMin(x1, mapSize);
+                x2 = mathMin(x2, mapSize);
+                x3 = mathMin(x3, mapSize);
             }
+            var toPosition22 = this._toPosition22;
             //Calculate points of the triangle.
             if (cellInfo._rightSideUp) {
                 pos = [
-                    self._toPosition22([x1, offsetY]),
-                    self._toPosition22([x2, height + offsetY]),
-                    self._toPosition22([x3, height + offsetY])
+                    toPosition22([x1, offsetY]),
+                    toPosition22([x2, height + offsetY]),
+                    toPosition22([x3, height + offsetY])
                 ];
             }
             else {
                 pos = [
-                    self._toPosition22([x1, height + offsetY]),
-                    self._toPosition22([x2, offsetY]),
-                    self._toPosition22([x3, offsetY])
+                    toPosition22([x1, height + offsetY]),
+                    toPosition22([x2, offsetY]),
+                    toPosition22([x3, offsetY])
                 ];
             }
             //Close the polygon ring.
@@ -1580,23 +1608,24 @@ MIT License
         GridMath._finalizeGrid = function (gridInfo, width, height, options, aggregateExpressions, scaleExpression, minCellWidth, arcAngles) {
             var scaleMetrics = {};
             var len = gridInfo.cells.length;
+            var self = this;
             //Finish aggregate calculations, calculate point_count_abbreviated and scale metrics.
             if (options.scaleProperty) {
                 //If there is a scaleProperty, we must finalize all cells before we calculate coordinates. 
                 for (var i = 0; i < len; i++) {
-                    this._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
+                    self._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
                 }
                 //Calculate polygon coordinates for cell.
                 for (var i = 0; i < len; i++) {
-                    gridInfo.cells[i].geometry.coordinates = GridMath.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
+                    gridInfo.cells[i].geometry.coordinates = self.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
                 }
             }
             else {
                 //If there is no scaleProperty, we can finalize cells and calculate polygons at the same time.
                 for (var i = 0; i < len; i++) {
-                    this._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
+                    self._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
                     //Calculate polygon coordinates for cell.
-                    gridInfo.cells[i].geometry.coordinates = GridMath.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
+                    gridInfo.cells[i].geometry.coordinates = self.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
                 }
             }
             gridInfo.scaleMetrics = scaleMetrics;
@@ -1844,10 +1873,11 @@ MIT License
          * @param points The new points to add.
          */
         GriddedDataSource.prototype.setPoints = function (points) {
-            this._points = [];
-            this._pixels = [];
-            this._addPoints(points);
-            this._recalculate();
+            var self = this;
+            self._points = [];
+            self._pixels = [];
+            self._addPoints(points);
+            self._recalculate();
         };
         /***********************************
          * Private functions
@@ -1859,6 +1889,9 @@ MIT License
          */
         GriddedDataSource.prototype._addPoints = function (points) {
             var self = this;
+            var pt = self._points;
+            var px = self._pixels;
+            var normalize = self._normalizeGetPixel22;
             if (points.type === 'FeatureCollection') {
                 points = points.features;
             }
@@ -1870,20 +1903,20 @@ MIT License
             }
             else if (points instanceof azmaps.Shape) {
                 if (points.getType() === 'Point') {
-                    self._pixels.push(self._normalizeGetPixel22(points.getCoordinates()));
-                    self._points.push(points.toJson());
+                    px.push(normalize(points.getCoordinates()));
+                    pt.push(points.toJson());
                 }
             }
             else if (points.type === 'Feature' && points.geometry.type === 'Point') {
                 var f = points;
-                self._pixels.push(self._normalizeGetPixel22(f.geometry.coordinates));
-                self._points.push(f);
+                px.push(normalize(f.geometry.coordinates));
+                pt.push(f);
             }
             else if (points.type === 'Point') {
                 //Convert raw points into features.
                 var p = points;
-                self._pixels.push(self._normalizeGetPixel22(p.coordinates));
-                self._points.push(new azmaps.data.Feature(p));
+                px.push(normalize(p.coordinates));
+                pt.push(new azmaps.data.Feature(p));
             }
         };
         /**
@@ -1904,6 +1937,7 @@ MIT License
          */
         GriddedDataSource.prototype._remove = function (point) {
             var self = this;
+            var pt = self._points;
             if (Array.isArray(point)) {
                 for (var i = 0, len = point.length; i < len; i++) {
                     self._remove(point[i]);
@@ -1911,29 +1945,28 @@ MIT License
             }
             else if (point instanceof azmaps.Shape) {
                 var id = point.getId();
-                for (var i = 0, len = self._points.length; i < len; i++) {
-                    if (self._points[i].id === id) {
+                for (var i = 0, len = pt.length; i < len; i++) {
+                    if (pt[i].id === id) {
                         self._remove(i);
                         break;
                     }
                 }
             }
             else if (typeof point === 'number') {
-                if (point < self._points.length) {
-                    self._points.splice(point, 1);
-                    self._pixels.splice(point, 1);
+                if (point < pt.length) {
+                    pt.splice(point, 1);
                 }
             }
             else if (typeof point === 'string') {
-                for (var i = 0, len = self._points.length; i < len; i++) {
-                    if (self._points[i].id === point) {
+                for (var i = 0, len = pt.length; i < len; i++) {
+                    if (pt[i].id === point) {
                         self._remove(i);
                         break;
                     }
                 }
             }
             else if (point.type === 'Feature') {
-                var idx = self._points.indexOf(point);
+                var idx = pt.indexOf(point);
                 self._remove(idx);
             }
         };

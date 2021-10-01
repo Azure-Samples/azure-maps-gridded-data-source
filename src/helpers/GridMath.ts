@@ -30,7 +30,7 @@ export interface GridInfo {
 /** An object that caches of arc angle calculations. */
 interface ArcAngles {
     /** Math.sin((i * 360 / numNodes + offset) * Math.PI / 180) */
-    sin : number[];
+    sin: number[];
 
     /** Math.cos((i * 360 / numNodes + offset) * Math.PI / 180) */
     cos: number[];
@@ -50,7 +50,7 @@ interface CubeCoord {
 
 /** A static class of grid based calculations. */
 export class GridMath {
-    
+
     /**
      * Aggregates points into a grid system.
      * @param points Points to aggregate.
@@ -66,7 +66,7 @@ export class GridMath {
             cellWidth: 25000,
             distanceUnits: 'meters',
             coverage: 1,
-            minCellWidth: 0,            
+            minCellWidth: 0,
             scaleExpression: self.LinearPointCountScaleExpression
         }, options || {});
 
@@ -76,34 +76,34 @@ export class GridMath {
 
         /* The pixel width of the cell to create. This is the spatial distance, converted to a pixel distance at the centerLatitude and zoom level 22. */
         const groundResolution = self._getGroundResolutionZ22(options.centerLatitude);
-        let width = azmaps.math.convertDistance(options.cellWidth, options.distanceUnits, 'meters') / groundResolution;  
-        let minCellWidth = azmaps.math.convertDistance(Math.min(options.minCellWidth, options.cellWidth), options.distanceUnits, 'meters') / groundResolution;       
+        let width = azmaps.math.convertDistance(options.cellWidth, options.distanceUnits, 'meters') / groundResolution;
+        let minCellWidth = azmaps.math.convertDistance(Math.min(options.minCellWidth, options.cellWidth), options.distanceUnits, 'meters') / groundResolution;
 
         //Determine if there are aggregate expressions to calculate.
         const hasAggregates = options.aggregateProperties && Object.keys(options.aggregateProperties).length > 0;
 
         //Parse the map expressions for aggregates.
-        const mapExpressions = (hasAggregates)? self._parseMapExpressions(options.aggregateProperties): {};
+        const mapExpressions = (hasAggregates) ? self._parseMapExpressions(options.aggregateProperties) : {};
 
         //Parse the scale expression.
         const scaleExpression = Expression.parse(options.scaleExpression || self.LinearPointCountScaleExpression);
 
         //Precalculate arc angle values for cell polygon generation.
         let arcAngles: ArcAngles = self._getArcAngles(options.gridType);
-        
+
         const sqrt3 = Math.sqrt(3);
 
         let height: number;
 
         switch (options.gridType) {
-            case 'pointyHexagon': 
+            case 'pointyHexagon':
                 height = 2 * width / sqrt3;
                 break;
             case 'hexagon':
-            case 'hexCircle':             
+            case 'hexCircle':
                 height = sqrt3 * width * 0.5;
                 break;
-            case 'triangle':                
+            case 'triangle':
                 height = sqrt3 * 0.5 * width;
                 break;
             default:
@@ -111,7 +111,7 @@ export class GridMath {
                 height = width;
                 break;
         }
-        
+
         //Initialized grid info.
         const gridInfo: GridInfo = {
             cells: [],
@@ -122,25 +122,25 @@ export class GridMath {
         };
 
         //Calculated cubic coordinate.
-        let coord: CubeCoord = { col:0, row:0, z:0 };
+        let coord: CubeCoord = { col: 0, row: 0, z: 0 };
 
         //Loop through the array of points and sort them into their respective bins.
-        for(let i = 0, len = points.length; i < len; i++) {
+        for (let i = 0, len = points.length; i < len; i++) {
             //Calculate the pixel location of a point at zoom level 22. 
-            let pixel = pixels[i];    
-            
+            let pixel = pixels[i];
+
             //Calculate the cubic coordinate for the data bin that contains the points pixel coordinate.
             self._getCellCoord(pixel, width, height, options.gridType, coord, sqrt3);
-            
+
             //Create a unique id for the bin using the x, y and z, parameters of the cubic coordinate.
-            let cellId = `x${coord.col}y${coord.row}z${coord.z}`; 
+            let cellId = `x${coord.col}y${coord.row}z${coord.z}`;
 
             let cell = self._getGridCell(cellId, coord, i, gridInfo, width, height, options.gridType, hasAggregates);
 
             //Calculate aggregates and metrics for cell.
             self._incrementCellInfo(cell.properties, points[i], options.aggregateProperties, mapExpressions);
         }
-        
+
         self._finalizeGrid(gridInfo, width, height, options, mapExpressions, scaleExpression, minCellWidth, arcAngles);
 
         return gridInfo;
@@ -154,14 +154,14 @@ export class GridMath {
      * @param gridInfo Previously calculated grid information.
      * @param options Options for the grid calculation.
      */
-    public static recalculateCoords(gridInfo: GridInfo, options: GriddedDataSourceOptions): void {    
+    public static recalculateCoords(gridInfo: GridInfo, options: GriddedDataSourceOptions): void {
         const self = this;
 
         //Parse the scale expression.
         const scaleExpression = Expression.parse(options.scaleExpression || self.LinearPointCountScaleExpression);
-        const minCellWidth = azmaps.math.convertDistance(Math.min(options.minCellWidth, options.cellWidth), options.distanceUnits, 'meters') / self._getGroundResolutionZ22(options.centerLatitude);   
+        const minCellWidth = azmaps.math.convertDistance(Math.min(options.minCellWidth, options.cellWidth), options.distanceUnits, 'meters') / self._getGroundResolutionZ22(options.centerLatitude);
 
-        for(let i= 0, len = gridInfo.cells.length; i < len; i++) {
+        for (let i = 0, len = gridInfo.cells.length; i < len; i++) {
             gridInfo.cells[i].geometry.coordinates = self.createGridPolygon(gridInfo.cells[i].properties, options, gridInfo.width, gridInfo.height, self._getArcAngles(options.gridType), minCellWidth, scaleExpression, gridInfo.scaleMetrics);
         }
     }
@@ -184,29 +184,30 @@ export class GridMath {
 
     /***********************************
      * Private functions
-     ***********************************/     
+     ***********************************/
 
-     /**
-      * Calculates the cell coordinate for a pixel.
-      * @param pixel Pixel to calculate cell for.
-      * @param width Width of cell.
-      * @param height Height of cell.
-      * @param gridType Grid type.
-      * @param coord Coordinate to update values on.
-      * @param sqrt3 Constant for square root of 3.
-      */
-     private static _getCellCoord(pixel: azmaps.Pixel, width: number, height: number, gridType: GridType,coord: CubeCoord, sqrt3: number): void {
-          //Calculate the cubic coordinate for the data bin that contains the points pixel coordinate.
-          switch (gridType) {
+    /**
+     * Calculates the cell coordinate for a pixel.
+     * @param pixel Pixel to calculate cell for.
+     * @param width Width of cell.
+     * @param height Height of cell.
+     * @param gridType Grid type.
+     * @param coord Coordinate to update values on.
+     * @param sqrt3 Constant for square root of 3.
+     */
+    private static _getCellCoord(pixel: azmaps.Pixel, width: number, height: number, gridType: GridType, coord: CubeCoord, sqrt3: number): void {
+        const self = this;
+        //Calculate the cubic coordinate for the data bin that contains the points pixel coordinate.
+        switch (gridType) {
             case 'pointyHexagon':
-                this._rotatedHexCellCoord(pixel, width, height, coord, sqrt3);
+                self._rotatedHexCellCoord(pixel, width, height, coord, sqrt3);
                 break;
             case 'hexagon':
-            case 'hexCircle':                    
-                this._hexCellCoord(pixel, width, height, coord, sqrt3);
+            case 'hexCircle':
+                self._hexCellCoord(pixel, width, height, coord, sqrt3);
                 break;
             case 'triangle':
-                this._triangleCellCoord(pixel, width, height, coord, sqrt3);
+                self._triangleCellCoord(pixel, width, height, coord, sqrt3);
                 break;
             default:
                 //Square grid system used. 
@@ -214,13 +215,13 @@ export class GridMath {
                 coord.row = Math.floor(pixel[1] / height);
                 break;
         }
-     }
-    
+    }
+
     private static readonly PI_By_180 = Math.PI / 180;
     private static readonly MapSize22 = 512 * Math.pow(2, 22);
     private static readonly InnerRadiusScale = Math.cos(30 * Math.PI / 180);
-    private static readonly LinearPointCountScaleExpression =  ['/', ['-', ['get', 'point_count'], ['get', 'min']], ['-',  ['get', 'max'], ['get', 'min']]];
-        
+    private static readonly LinearPointCountScaleExpression = ['/', ['-', ['get', 'point_count'], ['get', 'min']], ['-', ['get', 'max'], ['get', 'min']]];
+
     //Cached calculations for arc angle values for cell polygon generation.
     private static _arcAngles: Record<string, ArcAngles> = {};
 
@@ -228,7 +229,7 @@ export class GridMath {
       * Ground resolution in meters per pixel for zoom level 22 at the equator for 512x512 size tile system.
       * @param centerLatitude The latitude value to calculate the ground resolution for.
       */
-    private static _getGroundResolutionZ22(centerLatitude: number): number{
+    private static _getGroundResolutionZ22(centerLatitude: number): number {
         return Math.cos(centerLatitude * this.PI_By_180) * 2 * Math.PI * 6378137 / this.MapSize22;
     }
 
@@ -245,14 +246,14 @@ export class GridMath {
      */
     private static _getGridCell(cellId: string, coord: CubeCoord, i: number, gridInfo: GridInfo, width: number, height: number, gridType: GridType, hasAggregates: boolean): azmaps.data.Feature<azmaps.data.Polygon, CellInfo> {
         //Check to see if the bin has already been created and indexed.
-        const cellIdx = gridInfo.cellLookupTable[cellId];     
+        const cellIdx = gridInfo.cellLookupTable[cellId];
 
         if (cellIdx !== undefined) {
             //If the bin exists, add the point index to pointLookupTable of the bin.
             gridInfo.pointLookupTable[cellId].push(i);
 
             //Get reference to cell.
-            return gridInfo.cells[cellIdx];                
+            return gridInfo.cells[cellIdx];
         }
 
         //Create a grid cell for the specified cubic coordinates.
@@ -264,7 +265,7 @@ export class GridMath {
         gridInfo.cellLookupTable[cellId] = gridInfo.cells.length - 1;
 
         return cell;
-    }    
+    }
 
     /***********************************
      * Cell coordinate functions
@@ -278,7 +279,7 @@ export class GridMath {
      * @param coord A cubic coordinate object to set the values on.
      * @param sqrt3 The constant square rott of 3.
      */
-    private static _hexCellCoord(pixel: number[], width: number, height: number, coord: CubeCoord, sqrt3: number): void {   
+    private static _hexCellCoord(pixel: number[], width: number, height: number, coord: CubeCoord, sqrt3: number): void {
         coord.col = pixel[0] * 4 / (3 * width);
         coord.z = (pixel[1] - pixel[0] / sqrt3) / height;
         coord.row = -coord.col - coord.z;
@@ -288,7 +289,6 @@ export class GridMath {
         coord.col = pixel[0] * 2 / 3 / radius;
         coord.z = (-pixel[0] + pixel[1] * sqrt3) / 3 / radius;
         coord.row = -coord.col - coord.z;*/
-
 
         GridMath._roundCubeCoord(coord);
     }
@@ -313,13 +313,16 @@ export class GridMath {
      * @param coord A cubic coordinate object to set the values on.
      */
     private static _roundCubeCoord(coord: CubeCoord): void {
-        var rx = Math.round(coord.col);
-        var ry = Math.round(coord.row);
-        var rz = Math.round(coord.z);
+        const mathRound = Math.round;
+        const mathAbs = Math.abs;
 
-        const x_diff = Math.abs(rx - coord.col);
-        const y_diff = Math.abs(ry - coord.row);
-        const z_diff = Math.abs(rz - coord.z);
+        let rx = mathRound(coord.col);
+        let ry = mathRound(coord.row);
+        let rz = mathRound(coord.z);
+
+        const x_diff = mathAbs(rx - coord.col);
+        const y_diff = mathAbs(ry - coord.row);
+        const z_diff = mathAbs(rz - coord.z);
 
         if (x_diff > y_diff && x_diff > z_diff) {
             rx = -ry - rz;
@@ -346,21 +349,21 @@ export class GridMath {
         //Round values.
         coord.row = Math.floor(pixel[1] / height);
         coord.col = Math.floor(pixel[0] / width);
-    
+
         let dy = (coord.row + 1) * height - pixel[1];
         let dx = pixel[0] - coord.col * width;
 
         if (coord.row % 2 === 1) {
             dy = height - dy;
-        } 
+        }
 
         if (dy > 1) {
             if (dx < width * 0.5) {
                 // Left half of triangle.
                 const ratio = dx / dy;
-                if (ratio < 1 / sqrt3){
+                if (ratio < 1 / sqrt3) {
                     coord.col -= 0.5;
-                } 
+                }
             } else {
                 // Right half of triangle.
                 const ratio = (width - dx) / dy;
@@ -370,7 +373,7 @@ export class GridMath {
             }
         }
     }
-    
+
     /**
     * Creates an empty polygon feature with CellInfo object from it's center pixel coordinates from the specified cubic coordinate for a hexagon.
     * @param cellId: ID of the cell.
@@ -432,35 +435,38 @@ export class GridMath {
      * @param gridType Grid type
      */
     private static _getArcAngles(gridType: string): ArcAngles {
-        //Precalculate arc angle values for cell polygon generation.
-        let arcAngles = GridMath._arcAngles[gridType];
+        const self = GridMath;
+        const calculateArcAngles = self._calculateArcAngles;
 
-        if(!arcAngles){
+        //Precalculate arc angle values for cell polygon generation.
+        let arcAngles = self._arcAngles[gridType];
+
+        if (!arcAngles) {
             switch (gridType) {
                 case 'circle':
                 case 'hexCircle':
-                    arcAngles = this._calculateArcAngles(36);
+                    arcAngles = calculateArcAngles(36);
                     break;
                 case 'pointyHexagon':
-                    arcAngles = this._calculateArcAngles(6);
+                    arcAngles = calculateArcAngles(6);
                     break;
                 case 'hexagon':
-                    arcAngles = this._calculateArcAngles(6, 30);
+                    arcAngles = calculateArcAngles(6, 30);
                     break;
             }
 
             //Cache for faste lookups later.
-            GridMath._arcAngles[gridType] = arcAngles;
+            self._arcAngles[gridType] = arcAngles;
         }
 
         return arcAngles;
     }
 
-     /**
-      * Calculate the arc angles for a regular polygon.
-      * @param numNodes Number of nodes in regular polygon.
-      * @param offset Offset angle in degrees.
-      */
+    /**
+     * Calculate the arc angles for a regular polygon.
+     * @param numNodes Number of nodes in regular polygon.
+     * @param offset Offset angle in degrees.
+     */
     private static _calculateArcAngles(numNodes: number, offset?: number): ArcAngles {
         //Default the offset value to 0 if not set.
         offset = (offset) ? offset : 0;
@@ -470,19 +476,19 @@ export class GridMath {
 
         //The from the first node to the current node in radians.
         let arcAngleRadians: number;
-        let sinArcAngles:number[] = [];
-        let cosArcAngles:number[] = [];
+        let sinArcAngles: number[] = [];
+        let cosArcAngles: number[] = [];
 
-        for(let i = 0; i < numNodes; i++) {
+        for (let i = 0; i < numNodes; i++) {
             //Calcualte the arc angle from the first node to the current node in radians.
-            arcAngleRadians = (i * centralAngle + offset) * this.PI_By_180;
+            arcAngleRadians = (i * centralAngle + offset) * GridMath.PI_By_180;
             sinArcAngles.push(Math.sin(arcAngleRadians));
             cosArcAngles.push(Math.cos(arcAngleRadians));
         }
-        
+
         return {
             sin: sinArcAngles,
-            cos: cosArcAngles 
+            cos: cosArcAngles
         };
     }
 
@@ -491,11 +497,12 @@ export class GridMath {
      * @param pixel Pixel value to convert.
      */
     private static _toPosition22(pixel: azmaps.Pixel): azmaps.data.Position {
-        const mapSize = this.MapSize22;
+        const mapSize = GridMath.MapSize22;
+        const math = Math;
 
         return [
             360 * ((pixel[0] / mapSize) - 0.5),
-            90 - 360 * Math.atan(Math.exp(((pixel[1] / mapSize) - 0.5) * Math.PI * 2)) / Math.PI
+            90 - 360 * math.atan(math.exp(((pixel[1] / mapSize) - 0.5) * math.PI * 2)) / math.PI
         ];
     }
 
@@ -506,17 +513,17 @@ export class GridMath {
     private static _parseMapExpressions(aggregateProperties: Record<string, azmaps.AggregateExpression>): Record<string, AggregateExpression> {
         const mapExpressions: Record<string, AggregateExpression> = {};
 
-        if(aggregateProperties){
-            let agg:  azmaps.AggregateExpression;
-            
+        if (aggregateProperties) {
+            let agg: azmaps.AggregateExpression;
+
             Object.keys(aggregateProperties).forEach(key => {
                 agg = aggregateProperties[key];
 
                 //Aggregate expression has the format [operator: string, initialValue: boolean | number, mapExpression: Expression] or [operator: string, mapExpression: Expression]
-                if(agg && agg.length >= 2){
+                if (agg && agg.length >= 2) {
                     try {
                         mapExpressions[key] = AggregateExpression.parse(agg);
-                     } catch {
+                    } catch {
                         //Expression is invalid, remove aggregate.
                         aggregateProperties[key] = undefined;
                     }
@@ -538,14 +545,14 @@ export class GridMath {
      * @param mapExpressions Parsed map expressions for aggregates.
      */
     private static _incrementCellInfo(
-        cellInfo: CellInfo, 
-        point: azmaps.data.Feature<azmaps.data.Point, any>, 
-        aggregateProperties: Record<string, azmaps.AggregateExpression>, 
+        cellInfo: CellInfo,
+        point: azmaps.data.Feature<azmaps.data.Point, any>,
+        aggregateProperties: Record<string, azmaps.AggregateExpression>,
         mapExpressions: Record<string, AggregateExpression>): void {
 
         cellInfo.point_count++;
-               
-        if(aggregateProperties){
+
+        if (aggregateProperties) {
             let count = cellInfo.point_count;
             let prevValue: number | boolean;
             let newValue: number | boolean;
@@ -555,12 +562,12 @@ export class GridMath {
                 let agg = aggregateProperties[key];
                 let mapExp = mapExpressions[key];
 
-                if(mapExp) {
+                if (mapExp) {
                     newValue = mapExp.eval(point.properties);
 
                     //If only one point in the data, we need to initialize the property.
-                    if(count === 1){
-                        if(Array.isArray(agg[1])){
+                    if (count === 1) {
+                        if (Array.isArray(agg[1])) {
                             //Expression value is the initializer.
                             prevValue = null;
                         } else {
@@ -571,38 +578,38 @@ export class GridMath {
                         //Get any previous calculated value.
                         prevValue = props[key];
                     }
-                    
-                    if(prevValue !== null) {
-                        switch(agg[0]){
+
+                    if (prevValue !== null) {
+                        switch (agg[0]) {
                             case 'max':
-                                newValue = (prevValue > newValue)? prevValue : newValue;
+                                newValue = (prevValue > newValue) ? prevValue : newValue;
                                 break;
                             case 'min':
-                                newValue = (prevValue < newValue)? prevValue : newValue;
+                                newValue = (prevValue < newValue) ? prevValue : newValue;
                                 break;
                             case '+':
                                 newValue = <number>prevValue + <number>newValue;
                                 break;
                             case '*':
                                 newValue = <number>prevValue * <number>newValue;
-                                break;  
+                                break;
                             case 'all':
                                 newValue = <boolean>prevValue && <boolean>newValue;
-                                break;  
+                                break;
                             case 'any':
                                 newValue = <boolean>prevValue || <boolean>newValue;
-                                break;  
+                                break;
                         }
                     }
 
-                    if(newValue !== null){
+                    if (newValue !== null) {
                         props[key] = newValue;
                     }
                 }
 
                 cellInfo.aggregateProperties = props;
             });
-        } 
+        }
     }
 
     /**
@@ -618,29 +625,29 @@ export class GridMath {
         //Generate an abbreviated version of the point count.
         let abbrv = count.toString();
 
-        if(count >= 1000000){
+        if (count >= 1000000) {
             abbrv = `${Math.round(count / 1000000)}M`;
-        } else if(count >= 1000){
-            abbrv =  `${Math.round(count / 1000)}k`;
-        } 
+        } else if (count >= 1000) {
+            abbrv = `${Math.round(count / 1000)}k`;
+        }
 
-        cellInfo.point_count_abbreviated =  abbrv;
+        cellInfo.point_count_abbreviated = abbrv;
 
         let scaleVal = count;
 
-        if(aggregateExpressions){
+        if (aggregateExpressions) {
             //Finalize all mapped aggregate expressions.
             Object.keys(aggregateExpressions).forEach(key => {
                 aggregateExpressions[key].finalize(cellInfo, key);
             });
 
-            if(scaleProperty && typeof cellInfo.aggregateProperties[scaleProperty] !== 'undefined') {
+            if (scaleProperty && typeof cellInfo.aggregateProperties[scaleProperty] !== 'undefined') {
                 scaleVal = <number>cellInfo.aggregateProperties[scaleProperty];
             }
         }
 
-        if(scaleMetrics){
-            if(typeof scaleMetrics.min === 'undefined'){
+        if (scaleMetrics) {
+            if (typeof scaleMetrics.min === 'undefined') {
                 scaleMetrics.min = scaleVal;
                 scaleMetrics.max = scaleVal;
             } else {
@@ -663,7 +670,7 @@ export class GridMath {
             type: 'Feature',
             properties: {
                 cell_id: cell_id,
-                aggregateProperties: hasAggregates ? {}: undefined,
+                aggregateProperties: hasAggregates ? {} : undefined,
                 _x: cx,
                 _y: cy,
                 _rightSideUp: rightSideUp,
@@ -689,15 +696,15 @@ export class GridMath {
     * @returns A polygon that represents the data bin.
     */
     private static createGridPolygon(
-        cellInfo: CellInfo, 
+        cellInfo: CellInfo,
         options: GriddedDataSourceOptions,
-        width: number, 
+        width: number,
         height: number,
-        arcAngles: ArcAngles, 
-        minCellWidth: number,     
+        arcAngles: ArcAngles,
+        minCellWidth: number,
         scaleExp: Expression,
         scaleMetrics?: ScaleRange,): azmaps.data.Position[][] {
-
+        const self = GridMath;
         let scale = options.coverage || 1;
 
         //Get the scale value for the data bin if the user has specified a scale callback function.
@@ -712,26 +719,28 @@ export class GridMath {
             }
         }
 
+        const getRegularPolygon = self._getRegularPolygon;
+
         //Generate the polygon for the data bin.
         switch (options.gridType) {
             case 'square':
-                return this._getSquare(cellInfo, width, scale, minCellWidth);
+                return self._getSquare(cellInfo, width, scale, minCellWidth);
             case 'hexCircle':
                 //For hex cicles we want the inner radius of the hexagon which is calculated as Math.cos(30 * Math.PI / 180) * pixelRadius = 0.8660254037844387 * pixelRadius
-                return this._getRegularPolygon(cellInfo, this.InnerRadiusScale * width * 0.5 * scale, arcAngles, minCellWidth);     
+                return getRegularPolygon(cellInfo, self.InnerRadiusScale * width * 0.5 * scale, arcAngles, minCellWidth);
             case 'triangle':
-                return this._getTriangle(cellInfo, width, height, scale, minCellWidth);
+                return self._getTriangle(cellInfo, width, height, scale, minCellWidth);
             case 'pointyHexagon':
                 //Create a flat hexagon by rotating it 30 degrees.
-                return this._getRegularPolygon(cellInfo, height * 0.5 * scale, arcAngles, minCellWidth);
+                return getRegularPolygon(cellInfo, height * 0.5 * scale, arcAngles, minCellWidth);
             //case 'hexagon':
             //case 'circle':
             default:
                 //Create a flat hexagon by rotating it 30 degrees.
-                return this._getRegularPolygon(cellInfo, width * 0.5 * scale, arcAngles, minCellWidth);
+                return getRegularPolygon(cellInfo, width * 0.5 * scale, arcAngles, minCellWidth);
         }
     }
-    
+
     /**
      * Generates a cell polygon that has the shape of a regular polygon (hexagon, approximated circle...).
      * @param cellInfo The cell information for the polygon.
@@ -740,7 +749,7 @@ export class GridMath {
      * @returns A data bin polygon that can be displayed on the map.
      */
     private static _getRegularPolygon(cellInfo: CellInfo, radius: number, arcAngles: ArcAngles, minCellWidth: number): azmaps.data.Position[][] {
-        const self = this;
+        const self = GridMath;
 
         //The x and y pixel coordinates of each node.
         let dx: number;
@@ -749,7 +758,7 @@ export class GridMath {
         const pos: azmaps.data.Position[] = [];
         const mapSize = self.MapSize22;
 
-        if(radius * 2 < minCellWidth) { 
+        if (radius * 2 < minCellWidth) {
             radius = minCellWidth * 0.5;
         }
 
@@ -769,7 +778,7 @@ export class GridMath {
         //Create a data cell polygon from the array of positions.
         return [pos];
     }
-    
+
     /**
      * Calculates a polygon that is the shape of a square, where scaledPixelRadius is the distance from the center the an edge of the square.
      * @param cellInfo Information about the cell on a square grid.
@@ -786,13 +795,15 @@ export class GridMath {
         const left = Math.max(cellInfo._x - scaledHalfWidth, 0);
         const right = Math.min(cellInfo._x + scaledHalfWidth, self.MapSize22);
 
+        const toPosition22 = self._toPosition22;
+
         //Create the four corners of the square.        
         //Convert the pixel values into positions at zoom level 22.
         const pos = [
-            self._toPosition22([left, top]),
-            self._toPosition22([left, bottom]),
-            self._toPosition22([right, bottom]),
-            self._toPosition22([right, top])
+            toPosition22([left, top]),
+            toPosition22([left, bottom]),
+            toPosition22([right, bottom]),
+            toPosition22([right, top])
         ];
 
         //Close the polygon ring.
@@ -810,12 +821,10 @@ export class GridMath {
      * @param scale Scale to apply to the polygon.
      */
     private static _getTriangle(cellInfo: CellInfo, width: number, height: number, scale: number, minCellWidth: number): azmaps.data.Position[][] {
-        const self = this;
-
         let pos: azmaps.data.Position[];
 
         //Cache the x offset to reduce lookups and allow for better minification.
-        const offsetX = cellInfo._x;  
+        const offsetX = cellInfo._x;
 
         //Need to offset vertically to account for scale so that the triangle appears near the center of the grid cell.
         const offsetY = cellInfo._y + (height - height * scale) * 0.5;
@@ -824,45 +833,50 @@ export class GridMath {
         width *= scale;
         height *= scale;
 
-        if(width < minCellWidth){
-            height *=  minCellWidth / width;
+        if (width < minCellWidth) {
+            height *= minCellWidth / width;
         }
 
         //Calculate the half with
-        const halfWidth = width * 0.5;    
-        
-        const mapSize = self.MapSize22;
-        
+        const halfWidth = width * 0.5;
+
+        const mapSize = this.MapSize22;
+
         let x1 = offsetX;
         let x2 = offsetX + halfWidth;
         let x3 = offsetX - halfWidth;
-        
+
+        const mathMax = Math.max;
+        const mathMin = Math.min;
+
         //Clamp the triangle coordinates to a single globe and clip at the anti-Meridian. 
-        if(x3 < 0){
-            x1 = Math.max(x1, 0);
-            x2 = Math.max(x2, 0);
-            x3 = Math.max(x3, 0);
-        } else if (x2 > mapSize){
-            x1 = Math.min(x1, mapSize);
-            x2 = Math.min(x2, mapSize);
-            x3 = Math.min(x3, mapSize);
+        if (x3 < 0) {
+            x1 = mathMax(x1, 0);
+            x2 = mathMax(x2, 0);
+            x3 = mathMax(x3, 0);
+        } else if (x2 > mapSize) {
+            x1 = mathMin(x1, mapSize);
+            x2 = mathMin(x2, mapSize);
+            x3 = mathMin(x3, mapSize);
         }
+
+        const toPosition22 = this._toPosition22;
 
         //Calculate points of the triangle.
         if (cellInfo._rightSideUp) {
             pos = [
-                self._toPosition22([x1, offsetY]),
-                self._toPosition22([x2, height + offsetY]),
-                self._toPosition22([x3, height + offsetY])
+                toPosition22([x1, offsetY]),
+                toPosition22([x2, height + offsetY]),
+                toPosition22([x3, height + offsetY])
             ];
         } else {
             pos = [
-                self._toPosition22([x1, height + offsetY]),
-                self._toPosition22([x2, offsetY]),
-                self._toPosition22([x3, offsetY])
+                toPosition22([x1, height + offsetY]),
+                toPosition22([x2, offsetY]),
+                toPosition22([x3, offsetY])
             ];
         }
-        
+
         //Close the polygon ring.
         pos.push(pos[0]);
 
@@ -882,36 +896,37 @@ export class GridMath {
      * @param arcAngles Pre-calculate arc angles for regular polygon creation.
      */
     private static _finalizeGrid(
-        gridInfo: GridInfo, 
-        width: number, 
-        height: number, 
-        options: GriddedDataSourceOptions, 
-        aggregateExpressions: Record<string, AggregateExpression>, 
-        scaleExpression: Expression, 
+        gridInfo: GridInfo,
+        width: number,
+        height: number,
+        options: GriddedDataSourceOptions,
+        aggregateExpressions: Record<string, AggregateExpression>,
+        scaleExpression: Expression,
         minCellWidth: number,
         arcAngles: ArcAngles): void {
 
         const scaleMetrics: ScaleRange = {};
         const len = gridInfo.cells.length;
+        const self = this;
 
         //Finish aggregate calculations, calculate point_count_abbreviated and scale metrics.
-        if(options.scaleProperty){
+        if (options.scaleProperty) {
             //If there is a scaleProperty, we must finalize all cells before we calculate coordinates. 
-            for(let i = 0; i < len; i++) {
-                this._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
+            for (let i = 0; i < len; i++) {
+                self._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
             }
 
             //Calculate polygon coordinates for cell.
-            for(let i = 0; i < len; i++) {
-                gridInfo.cells[i].geometry.coordinates = GridMath.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
+            for (let i = 0; i < len; i++) {
+                gridInfo.cells[i].geometry.coordinates = self.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
             }
         } else {
             //If there is no scaleProperty, we can finalize cells and calculate polygons at the same time.
-            for(let i = 0; i < len; i++) {
-                this._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
-    
+            for (let i = 0; i < len; i++) {
+                self._finalizeCellInfo(gridInfo.cells[i].properties, aggregateExpressions, scaleMetrics, options.scaleProperty);
+
                 //Calculate polygon coordinates for cell.
-                gridInfo.cells[i].geometry.coordinates = GridMath.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
+                gridInfo.cells[i].geometry.coordinates = self.createGridPolygon(gridInfo.cells[i].properties, options, width, height, arcAngles, minCellWidth, scaleExpression, scaleMetrics);
             }
         }
 

@@ -102,14 +102,14 @@ export interface Expression {
   eval(val: any): any;
 }
 
-export interface SimpleExpression extends Array<any> {}
+export interface SimpleExpression extends Array<any> { }
 
 export class Expression {
-  static parse(exp: any[]): Expression { 
-    if(Array.isArray(exp)){
-      if(exp.length > 0){
+  static parse(exp: any[]): Expression {
+    if (Array.isArray(exp)) {
+      if (exp.length > 0) {
         const e = Expressions[exp[0]];
-        if(e){
+        if (e) {
           return e.parse(exp);
         }
       }
@@ -121,20 +121,20 @@ export class Expression {
   }
 }
 
-
 class ComparisonExp implements Expression {
   private _c: string;
   private _e1: Expression;
   private _e2: Expression;
-  
-  constructor(comp: string, e1: Expression, e2: Expression){
-    this._c = comp;
-    this._e1 = e1;
-    this._e2 = e2;
+
+  constructor(comp: string, e1: Expression, e2: Expression) {
+    const self = this;
+    self._c = comp;
+    self._e1 = e1;
+    self._e2 = e2;
   }
 
   static parse(exp: any[]): ComparisonExp {
-    if(exp.length >= 3){
+    if (exp.length >= 3) {
       return new ComparisonExp(exp[0], Expression.parse(exp[1]), Expression.parse(exp[2]));
     }
 
@@ -142,10 +142,11 @@ class ComparisonExp implements Expression {
   }
 
   public eval(val: any): any {
-    var v1 = this._e1.eval(val);
-    var v2 = this._e2.eval(val);
+    const self = this;
+    const v1 = self._e1.eval(val);
+    const v2 = self._e2.eval(val);
 
-    switch(this._c){
+    switch (self._c) {
       case '<':
         return v1 < v2;
       case '<=':
@@ -161,26 +162,26 @@ class ComparisonExp implements Expression {
       case '>':
         return v1 > v2;
     }
-    
+
     throw 'Invalid comparison';
   }
 }
 
 class MathExp implements Expression {
   private _o: string;
-  private _e: (number | Expression)[];  
-    
-  constructor(operation: string, e:  (number | Expression)[]){
+  private _e: (number | Expression)[];
+
+  constructor(operation: string, e: (number | Expression)[]) {
     this._o = operation;
     this._e = e;
   }
 
   static parse(exp: SimpleExpression): MathExp {
-    if(exp.length >= 3){
+    if (exp.length >= 3) {
       let conditions: (number | Expression)[] = [];
 
-      for(var i = 1, len = exp.length; i < len; i++){
-        if(Array.isArray(exp[1])){
+      for (var i = 1, len = exp.length; i < len; i++) {
+        if (Array.isArray(exp[1])) {
           conditions.push(Expression.parse(exp[i]));
         } else {
           conditions.push(exp[i]);
@@ -194,15 +195,17 @@ class MathExp implements Expression {
   }
 
   public eval(val: any): any {
-    const v1 = (this._e.length >= 1) ? this._getValue(val, this._e[0]) : 0;
-    const v2 = (this._e.length >= 2) ? this._getValue(val, this._e[1]): 0;
+    const self = this;
+    const math = Math;
+    const v1 = (self._e.length >= 1) ? self._getValue(val, self._e[0]) : 0;
+    const v2 = (self._e.length >= 2) ? self._getValue(val, self._e[1]) : 0;
 
-    switch(this._o){
+    switch (self._o) {
       case '+':
       case '*':
       case 'min':
       case 'max':
-        this._evalArray(val);
+        self._evalArray(val);
         break;
       case '-':
         return v2 - v1;
@@ -211,73 +214,74 @@ class MathExp implements Expression {
       case '%':
         return v1 % v2;
       case '^':
-        return Math.pow(v1, v2);
+        return math.pow(v1, v2);
       case 'abs':
-        return Math.abs(v1);
+        return math.abs(v1);
       case 'acos':
-        return Math.acos(v1);
+        return math.acos(v1);
       case 'asin':
-        return Math.asin(v1);
+        return math.asin(v1);
       case 'atan':
-        return Math.atan(v1);
+        return math.atan(v1);
       case 'ceil':
-        return Math.ceil(v1);
+        return math.ceil(v1);
       case 'cos':
-        return Math.cos(v1);
+        return math.cos(v1);
       case 'e':
-        return Math.exp(v1);
+        return math.exp(v1);
       case 'floor':
-        return Math.floor(v1);
+        return math.floor(v1);
       case 'ln':
-        return Math.log(v1);
+        return math.log(v1);
       case 'ln2':
-        return Math.LN2;
+        return math.LN2;
       case 'log10':
-        return Math.log(v1) / Math.LN10;
+        return math.log(v1) / math.LN10;
       case 'log2':
-        return Math.log(v1) / Math.LN2;
+        return math.log(v1) / math.LN2;
       case 'pi':
-        return Math.PI;
+        return math.PI;
       case 'round':
-        return Math.round(v1);
+        return math.round(v1);
       case 'sin':
-        return Math.sin(v1);
+        return math.sin(v1);
       case 'sqrt':
-        return Math.sqrt(v1);
+        return math.sqrt(v1);
       case 'tan':
-        return Math.tan(v1);
+        return math.tan(v1);
     }
 
-    throw `Invalid '${this._o}' expression.`;
+    throw `Invalid '${self._o}' expression.`;
   }
 
   private _evalArray(val: any): number {
+    const self = this;
     var f: (total: number, arg: number | Expression) => number;
     var init = 0;
 
-    switch(this._o){
+    switch (self._o) {
       case '+':
-        f = (total, arg) => total + this._getValue(val, arg);
+        f = (total, arg) => total + self._getValue(val, arg);
         break;
       case '*':
-          init = 1;
-          f = (total, arg) => total * this._getValue(val, arg);
-          break;
+        init = 1;
+        f = (total, arg) => total * self._getValue(val, arg);
+        break;
       case 'max':
-        init = this._getValue(val, this._e[0]);
-        f = (total, arg) => Math.max(total, this._getValue(val, arg));
+        init = self._getValue(val, self._e[0]);
+        f = (total, arg) => Math.max(total, self._getValue(val, arg));
         break;
       case 'min':
-        init = this._getValue(val, this._e[0]);
-        f = (total, arg) => Math.min(total, this._getValue(val, arg));
+        init = self._getValue(val, self._e[0]);
+        f = (total, arg) => Math.min(total, self._getValue(val, arg));
         break;
     }
 
-    return <number>this._e.reduce(f, init);
+    return <number>self._e.reduce(f, init);
   }
 
   private _getValue(val: any, e: number | Expression): number {
-    return (typeof e === 'number')? e : e.eval(val);
+    return (typeof e === 'number') ? e : e.eval(val);
   }
 }
 
@@ -287,17 +291,18 @@ export class CellAggregateExpression implements Expression {
   private _o: string;
   private _i: boolean | number;
   private _e: Expression;
-  
+
   constructor(operator: string, e: Expression, init?: number | number) {
-    this._o = operator;
-    this._e = e;
-    this._i = init;
+    const self = this;
+    self._o = operator;
+    self._e = e;
+    self._i = init;
   }
 
   static parse(exp: SimpleExpression): CellAggregateExpression {
-    if(exp.length >= 3){
+    if (exp.length >= 3) {
       return new CellAggregateExpression(exp[0], Expression.parse(exp[2]), exp[1]);
-    } else if(exp.length === 2){
+    } else if (exp.length === 2) {
       return new CellAggregateExpression(exp[0], Expression.parse(exp[1]));
     }
 
@@ -309,33 +314,34 @@ export class CellAggregateExpression implements Expression {
   }
 
   public finalize(properties: any, key: string): void {
-    
-    if(properties.aggregateProperties) {
-      let val = <boolean | number>properties.aggregateProperties[key];
-      const init = this._i;
 
-      if(typeof init!== 'undefined'){
-        switch(this._o){
-            case 'max':
-                val = Math.max(<number>init, <number>val);
-                break;
-            case 'min':
-                val = Math.min(<number>init, <number>val);
-                break;
-            case '+':
-                //Sum values and we will devide by point count in finialize stage to get average.
-                val = <number>init + <number>val;
-                break;
-            case '*':
-                val = <number>init * <number>val;
-                break;  
-            case 'all':
-                val = <boolean>init && <boolean>val;
-                break;  
-            case 'any':
-                val = <boolean>init || <boolean>val;
-                break;  
-          }
+    if (properties.aggregateProperties) {
+      const self = this;
+      let val = <boolean | number>properties.aggregateProperties[key];
+      const init = self._i;
+
+      if (typeof init !== 'undefined') {
+        switch (self._o) {
+          case 'max':
+            val = Math.max(<number>init, <number>val);
+            break;
+          case 'min':
+            val = Math.min(<number>init, <number>val);
+            break;
+          case '+':
+            //Sum values and we will devide by point count in finialize stage to get average.
+            val = <number>init + <number>val;
+            break;
+          case '*':
+            val = <number>init * <number>val;
+            break;
+          case 'all':
+            val = <boolean>init && <boolean>val;
+            break;
+          case 'any':
+            val = <boolean>init || <boolean>val;
+            break;
+        }
       }
 
       properties.aggregateProperties[key] = val;
@@ -350,15 +356,15 @@ var Expressions = {
     private _n: string;
     private _e: Expression;
 
-    constructor(name: string, e?: Expression){
+    constructor(name: string, e?: Expression) {
       this._n = name;
       this._e = e;
     }
 
     static parse(exp: SimpleExpression): Get {
-      let e: Expression = (exp.length >= 3)? Expression.parse(exp[2]): undefined;
+      let e: Expression = (exp.length >= 3) ? Expression.parse(exp[2]) : undefined;
 
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new Get(exp[1], e);
       }
 
@@ -368,7 +374,7 @@ var Expressions = {
     public eval(val: any): any {
       let o = val;
 
-      if(this._e){
+      if (this._e) {
         o = this._e.eval(val);
       }
 
@@ -382,15 +388,15 @@ var Expressions = {
     private _n: string;
     private _e: Expression;
 
-    constructor(name: string, e?: Expression){
+    constructor(name: string, e?: Expression) {
       this._n = name;
       this._e = e;
     }
 
     static parse(exp: SimpleExpression): Has {
-      let e: Expression = (exp.length >= 3)? Expression.parse(exp[2]): undefined;
+      let e: Expression = (exp.length >= 3) ? Expression.parse(exp[2]) : undefined;
 
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new Has(exp[1], e);
       }
 
@@ -400,7 +406,7 @@ var Expressions = {
     public eval(val: any): any {
       let o = val;
 
-      if(this._e){
+      if (this._e) {
         o = this._e.eval(val)[this._n];
       }
 
@@ -412,12 +418,12 @@ var Expressions = {
   literal: class Literal implements Expression {
     private _v: any;
 
-    constructor(val: any){
+    constructor(val: any) {
       this._v = val;
     }
 
     static parse(exp: SimpleExpression): Literal {
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new Literal(exp[1]);
       }
 
@@ -433,14 +439,14 @@ var Expressions = {
   at: class At implements Expression {
     private _i: number;
     private _e: Expression;
-    
-    constructor(idx: number, e: Expression){
+
+    constructor(idx: number, e: Expression) {
       this._i = idx;
       this._e = e;
     }
 
     static parse(exp: SimpleExpression): At {
-      if(exp.length >= 3){
+      if (exp.length >= 3) {
         return new At(exp[1], Expression.parse(exp[2]));
       }
 
@@ -458,21 +464,22 @@ var Expressions = {
     private _v: boolean | string | number;
     private _i: number;
     private _e: Expression;
-    
-    constructor(value: boolean | string | number, e: Expression, idx: number){
-      this._v = value;
-      this._e = e;
-      this._i = idx;
+
+    constructor(value: boolean | string | number, e: Expression, idx: number) {
+      const self = this;
+      self._v = value;
+      self._e = e;
+      self._i = idx;
     }
 
     static parse(exp: SimpleExpression): IndexOf {
       let idx = 0;
 
-      if(exp.length >= 4){
+      if (exp.length >= 4) {
         idx = exp[3];
       }
 
-      if(exp.length >= 3){
+      if (exp.length >= 3) {
         return new IndexOf(exp[1], Expression.parse(exp[2]), idx);
       }
 
@@ -480,20 +487,21 @@ var Expressions = {
     }
 
     public eval(val: any): any {
-      return this._e.eval(val).indexOf(this._v, this._i);
+      const self = this;
+      return self._e.eval(val).indexOf(self._v, self._i);
     }
   },
 
   //['length', string | array]
   length: class Length implements Expression {
     private _e: Expression;
-    
-    constructor(arr: Expression){
+
+    constructor(arr: Expression) {
       this._e = arr;
     }
 
     static parse(exp: SimpleExpression): Length {
-      if(exp.length>= 3){
+      if (exp.length >= 3) {
         return new Length(Expression.parse(exp[1]));
       }
 
@@ -511,21 +519,22 @@ var Expressions = {
     private _s: number;
     private _e: number;
     private _v: Expression;
-    
-    constructor(value: Expression, start: number, end: number){      
-      this._v = value;
-      this._s = start;
-      this._e = end;
+
+    constructor(value: Expression, start: number, end: number) {
+      const self = this;
+      self._v = value;
+      self._s = start;
+      self._e = end;
     }
 
     static parse(exp: SimpleExpression): Slice {
       let idx;
 
-      if(exp.length >= 4){
+      if (exp.length >= 4) {
         idx = exp[3];
       }
 
-      if(exp.length >= 3){
+      if (exp.length >= 3) {
         return new Slice(Expression.parse(exp[1]), exp[2], idx);
       }
 
@@ -533,20 +542,21 @@ var Expressions = {
     }
 
     public eval(val: any): any {
-      return this._v.eval(val).slice(this._s, this._e);
+      const self = this;
+      return self._v.eval(val).slice(self._s, self._e);
     }
   },
 
   //['!', boolean]
   '!': class Not implements Expression {
     private _e: Expression;
-    
-    constructor(e: Expression){
+
+    constructor(e: Expression) {
       this._e = e;
     }
 
     static parse(exp: any[]): Not {
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new Not(Expression.parse(exp[1]));
       }
 
@@ -579,13 +589,13 @@ var Expressions = {
   // ['to-boolean', value]
   'to-boolean': class toBoolean implements Expression {
     private _e: Expression;
-    
-    constructor(e: Expression){
+
+    constructor(e: Expression) {
       this._e = e;
     }
 
     static parse(exp: any[]): toBoolean {
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new toBoolean(Expression.parse(exp[1]));
       }
 
@@ -595,11 +605,11 @@ var Expressions = {
     public eval(val: any): any {
       var v = this._e.eval(val);
 
-      if(typeof v === 'boolean'){
+      if (typeof v === 'boolean') {
         return v;
-      } else if(typeof v === 'string'){
+      } else if (typeof v === 'string') {
         return ['true', 'yes', 'on', '1'].indexOf(v.toLowerCase()) > -1;
-      } else if(typeof v === 'number'){
+      } else if (typeof v === 'number') {
         return v === 1;
       }
 
@@ -610,13 +620,13 @@ var Expressions = {
   //['to-number', value]
   'to-number': class toNumber implements Expression {
     private _e: Expression;
-    
-    constructor(e: Expression){
+
+    constructor(e: Expression) {
       this._e = e;
     }
 
     static parse(exp: any[]): toNumber {
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new toNumber(Expression.parse(exp[1]));
       }
 
@@ -626,11 +636,11 @@ var Expressions = {
     public eval(val: any): any {
       var v = this._e.eval(val);
 
-      if(typeof v === 'boolean'){
-        return (v)? 1 : 0;
-      } else if(typeof v === 'string'){
+      if (typeof v === 'boolean') {
+        return (v) ? 1 : 0;
+      } else if (typeof v === 'string') {
         return Number.parseFloat(v);
-      } else if(typeof v === 'number'){
+      } else if (typeof v === 'number') {
         return v;
       }
 
@@ -641,13 +651,13 @@ var Expressions = {
   //['to-string', value]
   'to-string': class toString implements Expression {
     private _e: Expression;
-    
-    constructor(e: Expression){
+
+    constructor(e: Expression) {
       this._e = e;
     }
 
     static parse(exp: any[]): toString {
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new toString(Expression.parse(exp[1]));
       }
 
@@ -657,7 +667,7 @@ var Expressions = {
     public eval(val: any): any {
       var v = this._e.eval(val);
 
-      if(v.toString){
+      if (v.toString) {
         return v.toString();
       }
 
@@ -668,13 +678,13 @@ var Expressions = {
   //['typeof', value]
   typeof: class TypeOf implements Expression {
     private _e: Expression;
-    
-    constructor(e: Expression){
+
+    constructor(e: Expression) {
       this._e = e;
     }
 
     static parse(exp: any[]): TypeOf {
-      if(exp.length >= 2){
+      if (exp.length >= 2) {
         return new TypeOf(Expression.parse(exp[1]));
       }
 
@@ -698,44 +708,46 @@ var Expressions = {
     ]
   */
   case: class Case implements Expression {
-      private _e: Expression[];
-      private _o: (string | number | boolean)[];
-      private _f: string | number | boolean;
-      
-      constructor(conditions: Expression[], outputs: (string | number | boolean)[], fallback: string | number | boolean){
-        this._e = conditions;
-        this._o = outputs;
-        this._f = fallback;
-      }
+    private _e: Expression[];
+    private _o: (string | number | boolean)[];
+    private _f: string | number | boolean;
 
-      static parse(exp: any[]): Case {
-        if(exp.length >= 3 && exp.length % 2 === 0){
-          let conditions: Expression[] = [];
-          let outputs: any[] = [];        
+    constructor(conditions: Expression[], outputs: (string | number | boolean)[], fallback: string | number | boolean) {
+      const self = this;
+      self._e = conditions;
+      self._o = outputs;
+      self._f = fallback;
+    }
 
-          for(var i=1, len = exp.length; i < len; i += 2){
-            conditions.push(Expression.parse(exp[i]));
-            outputs.push(exp[i + 1]);
-          }
+    static parse(exp: any[]): Case {
+      if (exp.length >= 3 && exp.length % 2 === 0) {
+        let conditions: Expression[] = [];
+        let outputs: any[] = [];
 
-          return new Case(conditions, outputs, exp[exp.length - 1]);
+        for (var i = 1, len = exp.length; i < len; i += 2) {
+          conditions.push(Expression.parse(exp[i]));
+          outputs.push(exp[i + 1]);
         }
 
-        throw "Invalid 'case' expression.";
+        return new Case(conditions, outputs, exp[exp.length - 1]);
       }
 
-      public eval(val: any): any {
-        let c: boolean;
-        for(var i = 0, len = this._e.length; i < len; i++){
-          c = this._e[i].eval(val);
+      throw "Invalid 'case' expression.";
+    }
 
-          if(c){
-            return this._o[i];
-          }
+    public eval(val: any): any {
+      const self = this;
+      let c: boolean;
+      for (var i = 0, len = self._e.length; i < len; i++) {
+        c = self._e[i].eval(val);
+
+        if (c) {
+          return self._o[i];
         }
-        
-        return this._f;
       }
+
+      return self._f;
+    }
   },
 
   /*
@@ -755,21 +767,22 @@ var Expressions = {
     private _l: (string | number | boolean)[];
     private _o: (string | number | boolean)[];
     private _f: string | number | boolean;
-    
-    constructor(input: Expression, labels: (string | number | boolean)[], outputs: (string | number | boolean)[], fallback: string | number | boolean){
-      this._i = input;
-      this._l = labels;
-      this._o = outputs;
-      this._f = fallback;
+
+    constructor(input: Expression, labels: (string | number | boolean)[], outputs: (string | number | boolean)[], fallback: string | number | boolean) {
+      const self = this;
+      self._i = input;
+      self._l = labels;
+      self._o = outputs;
+      self._f = fallback;
     }
 
     static parse(exp: any[]): Match {
-      if(exp.length >= 5 && exp.length % 2 === 1){
+      if (exp.length >= 5 && exp.length % 2 === 1) {
         let input = Expression.parse(exp[1]);
         let labels: any[] = [];
-        let outputs: any[] = [];        
+        let outputs: any[] = [];
 
-        for(var i=2, len = exp.length; i < len; i += 2){
+        for (var i = 2, len = exp.length; i < len; i += 2) {
           labels.push(exp[i]);
           outputs.push(exp[i + 1]);
         }
@@ -781,15 +794,16 @@ var Expressions = {
     }
 
     public eval(val: any): any {
-      let v = this._i.eval(val);
+      const self = this;
+      let v = self._i.eval(val);
 
-      for(var i = 0, len = this._l.length; i < len; i++){
-        if(this._l[i] === v){
-          return this._o[i];
+      for (var i = 0, len = self._l.length; i < len; i++) {
+        if (self._l[i] === v) {
+          return self._o[i];
         }
       }
-      
-      return this._f;
+
+      return self._f;
     }
   },
 
@@ -809,42 +823,45 @@ var Expressions = {
     private _i: Expression;
     private _l: (string | number | boolean)[];
     private _o: (string | number | boolean)[];
-    private _f: string | number | boolean;
-    
-    constructor(input: Expression, labels: (string | number | boolean)[], outputs: (string | number | boolean)[], fallback: string | number | boolean){
-      this._i = input;
-      this._l = labels;
-      this._o = outputs;
-      this._f = fallback;
+
+    constructor(input: Expression, labels: (string | number | boolean)[], outputs: (string | number | boolean)[]) {
+      const self = this;
+      self._i = input;
+      self._l = labels;
+      self._o = outputs;
     }
 
     static parse(exp: any[]): Step {
-      if(exp.length >= 5 && exp.length % 2 === 1){
+      if (exp.length >= 5 && exp.length % 2 === 1) {
         let input = Expression.parse(exp[1]);
         let labels: any[] = [];
-        let outputs: any[] = [];        
+        let outputs: any[] = [];
 
-        for(var i=2, len = exp.length; i < len; i += 2){
+        //Add the base
+        outputs.push(exp[2]);
+
+        for (var i = 3, len = exp.length; i < len; i += 2) {
           labels.push(exp[i]);
           outputs.push(exp[i + 1]);
         }
 
-        return new Step(input, labels, outputs, exp[exp.length - 1]);
+        return new Step(input, labels, outputs);
       }
 
       throw "Invalid 'step' expression.";
     }
 
     public eval(val: any): any {
-      let v = this._i.eval(val);
+      const self = this;
+      let v = self._i.eval(val);
 
-      for(var i = 0, len = this._l.length; i < len; i++){
-        if(v <= this._l[i]){
-          return this._o[i];
+      for (var i = 0, len = self._l.length; i < len; i++) {
+        if (v <= self._l[i]) {
+          return self._o[i];
         }
       }
-      
-      return this._o[this._o.length - 1];
+
+      return self._o[self._o.length - 1];
     }
   },
 
@@ -853,14 +870,14 @@ var Expressions = {
   in: class In implements Expression {
     private _i: boolean | string | number;
     private _e: Expression;
-    
-    constructor(idx: number, e: Expression){
+
+    constructor(idx: number, e: Expression) {
       this._i = idx;
       this._e = e;
     }
 
     static parse(exp: SimpleExpression): In {
-      if(exp.length >= 3){
+      if (exp.length >= 3) {
         return new In(exp[1], Expression.parse(exp[2]));
       }
 
@@ -875,16 +892,16 @@ var Expressions = {
   //['all', boolean, boolean, …]  
   all: class All implements Expression {
     private _e: Expression[];
-    
-    constructor(e: Expression[]){
+
+    constructor(e: Expression[]) {
       this._e = e;
     }
 
     static parse(exp: SimpleExpression): All {
-      if(exp.length >= 3 && exp.length % 2 === 0){
+      if (exp.length >= 3 && exp.length % 2 === 0) {
         let conditions: Expression[] = [];
 
-        for(var i=1, len = exp.length; i < len; i++){
+        for (var i = 1, len = exp.length; i < len; i++) {
           conditions.push(Expression.parse(exp[i]));
         }
 
@@ -908,16 +925,16 @@ var Expressions = {
   //['any', boolean, boolean, …]
   any: class Any implements Expression {
     private _e: Expression[];
-    
-    constructor(e: Expression[]){
+
+    constructor(e: Expression[]) {
       this._e = e;
     }
 
     static parse(exp: SimpleExpression): Any {
-      if(exp.length >= 3 && exp.length % 2 === 0){
+      if (exp.length >= 3 && exp.length % 2 === 0) {
         let conditions: Expression[] = [];
 
-        for(var i=1, len = exp.length; i < len; i++){
+        for (var i = 1, len = exp.length; i < len; i++) {
           conditions.push(Expression.parse(exp[i]));
         }
 
@@ -933,7 +950,7 @@ var Expressions = {
       this._e.forEach(e => {
         state = state || e.eval(val);
       })
-      
+
       return state;
     }
   },
