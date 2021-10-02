@@ -782,7 +782,7 @@ var Expressions = {
         let labels: any[] = [];
         let outputs: any[] = [];
 
-        for (var i = 2, len = exp.length; i < len; i += 2) {
+        for (var i = 2, len = exp.length - 1; i < len; i += 2) {
           labels.push(exp[i]);
           outputs.push(exp[i + 1]);
         }
