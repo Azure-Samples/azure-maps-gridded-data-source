@@ -29,7 +29,7 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
       - run: npm ci --force
-      - run: npm run build --if-present
+      - run: npm run build --if-present --isNpmBuild
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
