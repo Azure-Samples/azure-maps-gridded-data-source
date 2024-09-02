@@ -44,7 +44,7 @@ See the [documentation](https://github.com/Azure-Samples/azure-maps-gridded-data
 
 ## Samples
 
-[Extruded gridded data source](https://samples.azuremaps.com/polygons/extruded-gridded-data-source/screenshot.jpg)
+[Extruded gridded data source](https://samples.azuremaps.com/?search=gridded&sample=extruded-gridded-data-source)
 <br/>[<img src="https://samples.azuremaps.com/polygons/extruded-gridded-data-source/screenshot.jpg" height="200px">](https://samples.azuremaps.com/polygons/extruded-gridded-data-source/screenshot.jpg)
 
 [Show points of gridded data source](https://samples.azuremaps.com/?search=gridded&sample=show-points-of-gridded-data-source)
