@@ -45,13 +45,13 @@ See the [documentation](https://github.com/Azure-Samples/azure-maps-gridded-data
 ## Samples
 
 [Extruded gridded data source](https://samples.azuremaps.com/?search=gridded&sample=extruded-gridded-data-source)
-<br/>[<img src="https://samples.azuremaps.com/polygons/extruded-gridded-data-source/screenshot.jpg" height="200px">](https://samples.azuremaps.com/polygons/extruded-gridded-data-source/screenshot.jpg)
+<br/>[<img src="https://samples.azuremaps.com/polygons/extruded-gridded-data-source/screenshot.jpg" height="200px">](https://samples.azuremaps.com/?search=gridded&sample=extruded-gridded-data-source)
 
 [Show points of gridded data source](https://samples.azuremaps.com/?search=gridded&sample=show-points-of-gridded-data-source)
-<br/>[<img src="https://samples.azuremaps.com/polygons/show-points-of-gridded-data-source/screenshot.jpg">](https://samples.azuremaps.com/polygons/show-points-of-gridded-data-source/screenshot.jpg)
+<br/>[<img src="https://samples.azuremaps.com/polygons/show-points-of-gridded-data-source/screenshot.jpg" height="200px">](https://samples.azuremaps.com/?search=gridded&sample=show-points-of-gridded-data-source)
 
 [Gridded data source options](https://samples.azuremaps.com/?search=gridded&sample=gridded-data-source-options)
-<br/>[<img src="https://samples.azuremaps.com/polygons/gridded-data-source-options/screenshot.jpg" height="200px">](https://samples.azuremaps.com/polygons/gridded-data-source-options/screenshot.jpg)
+<br/>[<img src="https://samples.azuremaps.com/polygons/gridded-data-source-options/screenshot.jpg" height="200px">](https://samples.azuremaps.com/?search=gridded&sample=gridded-data-source-options)
 
 ## Ideas for enhancements
 
@@ -79,7 +79,7 @@ See the [documentation](https://github.com/Azure-Samples/azure-maps-gridded-data
 
 ## Additional Resources
 
-* [Azure Maps (main site)](https://azure.microsoft.com/en-us/)
+* [Azure Maps (main site)](https://azure.microsoft.com/en-us/products/azure-maps/)
 * [Azure Maps Documentation](https://docs.microsoft.com/azure/azure-maps/index)
 * [Azure Maps Blog](https://azure.microsoft.com/en-us/blog/product/azure-maps/)
 * [Microsoft Q&A](https://docs.microsoft.com/answers/topics/azure-maps.html)
