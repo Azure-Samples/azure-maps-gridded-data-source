@@ -86,7 +86,7 @@ export class GridMath {
         const mapExpressions = (hasAggregates) ? self._parseMapExpressions(options.aggregateProperties) : {};
 
         //Parse the scale expression.
-        const scaleExpression = Expression.parse(options.scaleExpression || self.LinearPointCountScaleExpression);
+        const scaleExpression = Expression.parse((options.scaleExpression || self.LinearPointCountScaleExpression) as any[]);
 
         //Precalculate arc angle values for cell polygon generation.
         let arcAngles: ArcAngles = self._getArcAngles(options.gridType);
@@ -158,7 +158,7 @@ export class GridMath {
         const self = this;
 
         //Parse the scale expression.
-        const scaleExpression = Expression.parse(options.scaleExpression || self.LinearPointCountScaleExpression);
+        const scaleExpression = Expression.parse((options.scaleExpression || self.LinearPointCountScaleExpression) as any[]);
         const minCellWidth = azmaps.math.convertDistance(Math.min(options.minCellWidth, options.cellWidth), options.distanceUnits, 'meters') / self._getGroundResolutionZ22(options.centerLatitude);
 
         for (let i = 0, len = gridInfo.cells.length; i < len; i++) {

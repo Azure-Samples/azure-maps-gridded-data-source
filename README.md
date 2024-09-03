@@ -25,18 +25,16 @@ A couple of the key features of this module:
 
 | Name | Image | Description | 
 |-------|------|-------------|
-| Hexagon | ![hexagon grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/hexagon.png) | A haxagon grid where the top of the hexagon is flat. |
-| Pointy hexagon | ![pointy hexagon grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/pointyhexagon.png) | A haxagon grid where the top of the hexagon is pointy. |
-| Square | ![square grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/square.png) | A sguare grid. |
-| Triangle | ![triangle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/triangle.png) | A triangular grid. |
-| Circle | ![circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/circle.png) | A square grid where cells are converted into circles. The circle does not cover the entire area the cell represents, but does include all points that would fall within the specified grid cell. |
-| Hexagon circle  | ![hexagon circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/blob/main/docs/images/hexcircle.png) | A haxagon grid where cells are converted into circles. The circle does not cover the entire area the cell represents, but does include all points that would fall within the specified grid cell. |
+| Hexagon | ![hexagon grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/raw/main/docs/images/hexagon.png) | A haxagon grid where the top of the hexagon is flat. |
+| Pointy hexagon | ![pointy hexagon grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/raw/main/docs/images/pointyhexagon.png) | A haxagon grid where the top of the hexagon is pointy. |
+| Square | ![square grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/raw/main/docs/images/square.png) | A sguare grid. |
+| Triangle | ![triangle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/raw/main/docs/images/triangle.png) | A triangular grid. |
+| Circle | ![circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/raw/main/docs/images/circle.png) | A square grid where cells are converted into circles. The circle does not cover the entire area the cell represents, but does include all points that would fall within the specified grid cell. |
+| Hexagon circle  | ![hexagon circle grid](https://github.com/Azure-Samples/azure-maps-gridded-data-source/raw/main/docs/images/hexcircle.png) | A haxagon grid where cells are converted into circles. The circle does not cover the entire area the cell represents, but does include all points that would fall within the specified grid cell. |
 
 **Credit**
 
 A lot of the hexagon grid based algorithms came from this [awesome site](https://www.redblobgames.com/grids/hexagons/).
-
-Triangle grid calculations are based on this [blog post](http://csharphelper.com/blog/2015/10/draw-a-triangular-grid-in-c/)
 
 ## Getting started
 
@@ -46,14 +44,14 @@ See the [documentation](https://github.com/Azure-Samples/azure-maps-gridded-data
 
 ## Samples
 
-[Extruded gridded data source](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Extruded%20gridded%20data%20source)
-<br/>[<img src="https://github.com/Azure-Samples/AzureMapsCodeSamples/raw/master/AzureMapsCodeSamples/SiteResources/screenshots/Extruded-gridded-data-source.jpg" height="200px">](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Extruded%20gridded%20data%20source)
+[Extruded gridded data source](https://samples.azuremaps.com/?search=gridded&sample=extruded-gridded-data-source)
+<br/>[<img src="https://samples.azuremaps.com/polygons/extruded-gridded-data-source/screenshot.jpg" height="200px">](https://samples.azuremaps.com/?search=gridded&sample=extruded-gridded-data-source)
 
-[Show points of gridded data source](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Show%20points%20of%20gridded%20data%20source)
-<br/>[<img src="https://github.com/Azure-Samples/AzureMapsCodeSamples/raw/master/AzureMapsCodeSamples/SiteResources/screenshots/Show-points-of-gridded-data-source.jpg" height="200px">](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Show%20points%20of%20gridded%20data%20source)
+[Show points of gridded data source](https://samples.azuremaps.com/?search=gridded&sample=show-points-of-gridded-data-source)
+<br/>[<img src="https://samples.azuremaps.com/polygons/show-points-of-gridded-data-source/screenshot.jpg" height="200px">](https://samples.azuremaps.com/?search=gridded&sample=show-points-of-gridded-data-source)
 
-[Gridded data source options](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Gridded%20data%20source%20options)
-<br/>[<img src="https://github.com/Azure-Samples/AzureMapsCodeSamples/raw/master/AzureMapsCodeSamples/SiteResources/screenshots/Gridded-data-source-options.jpg" height="200px">](https://azuremapscodesamples.azurewebsites.net/index.html?sample=Gridded%20data%20source%20options)
+[Gridded data source options](https://samples.azuremaps.com/?search=gridded&sample=gridded-data-source-options)
+<br/>[<img src="https://samples.azuremaps.com/polygons/gridded-data-source-options/screenshot.jpg" height="200px">](https://samples.azuremaps.com/?search=gridded&sample=gridded-data-source-options)
 
 ## Ideas for enhancements
 
@@ -76,15 +74,14 @@ See the [documentation](https://github.com/Azure-Samples/azure-maps-gridded-data
 **Additional projects**
 
 * [Azure Maps Web SDK Samples](https://github.com/Azure-Samples/AzureMapsCodeSamples)
-* [Azure Maps Gov Cloud Web SDK Samples](https://github.com/Azure-Samples/AzureMapsGovCloudCodeSamples)
 * [Azure Maps & Azure Active Directory Samples](https://github.com/Azure-Samples/Azure-Maps-AzureAD-Samples)
 * [List of open-source Azure Maps projects](https://github.com/microsoft/Maps/blob/master/AzureMaps.md)
 
 ## Additional Resources
 
-* [Azure Maps (main site)](https://azure.com/maps)
+* [Azure Maps (main site)](https://azure.microsoft.com/en-us/products/azure-maps/)
 * [Azure Maps Documentation](https://docs.microsoft.com/azure/azure-maps/index)
-* [Azure Maps Blog](https://azure.microsoft.com/blog/topics/azure-maps/)
+* [Azure Maps Blog](https://azure.microsoft.com/en-us/blog/product/azure-maps/)
 * [Microsoft Q&A](https://docs.microsoft.com/answers/topics/azure-maps.html)
 * [Azure Maps feedback](https://feedback.azure.com/forums/909172-azure-maps)
 
