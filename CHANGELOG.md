@@ -1,5 +1,11 @@
 # Azure Maps Gridded Data Source module Changelog
 
+<a name="0.0.3"></a>
+## 0.0.3 (Unreleased)
+
+- Update dependencies versions.
+- Update readme links.
+
 <a name="0.0.2"></a>
 ## 0.0.2 (2021-10-1)
 

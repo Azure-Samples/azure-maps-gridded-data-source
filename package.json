@@ -1,6 +1,6 @@
 {
   "name": "azure-maps-gridded-data-source",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A module for the Azure Maps Web SDK that provides a data source that clusters data points into cells of a grid area.",
   "keywords": [
     "azure",
