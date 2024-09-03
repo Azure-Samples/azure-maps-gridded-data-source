@@ -26,18 +26,18 @@ MIT License
     'use strict';
 
     /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
+    Copyright (c) Microsoft Corporation.
 
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
+    Permission to use, copy, modify, and/or distribute this software for any
+    purpose with or without fee is hereby granted.
 
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
+    THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+    REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+    AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+    INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+    LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+    OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+    PERFORMANCE OF THIS SOFTWARE.
     ***************************************************************************** */
     /* global Reflect, Promise */
 
@@ -216,7 +216,7 @@ MIT License
             if (exp.length >= 3) {
                 return new ComparisonExp(exp[0], Expression.parse(exp[1]), Expression.parse(exp[2]));
             }
-            throw "Invalid '" + exp[1] + "' expression.";
+            throw "Invalid '".concat(exp[1], "' expression.");
         };
         ComparisonExp.prototype.eval = function (val) {
             var self = this;
@@ -260,7 +260,7 @@ MIT License
                 }
                 return new MathExp(exp[0], conditions);
             }
-            throw "Invalid '" + exp[0] + "' expression.";
+            throw "Invalid '".concat(exp[0], "' expression.");
         };
         MathExp.prototype.eval = function (val) {
             var self = this;
@@ -317,7 +317,7 @@ MIT License
                 case 'tan':
                     return math.tan(v1);
             }
-            throw "Invalid '" + self._o + "' expression.";
+            throw "Invalid '".concat(self._o, "' expression.");
         };
         MathExp.prototype._evalArray = function (val) {
             var self = this;
@@ -922,7 +922,7 @@ MIT License
             //Parse the map expressions for aggregates.
             var mapExpressions = (hasAggregates) ? self._parseMapExpressions(options.aggregateProperties) : {};
             //Parse the scale expression.
-            var scaleExpression = Expression.parse(options.scaleExpression || self.LinearPointCountScaleExpression);
+            var scaleExpression = Expression.parse((options.scaleExpression || self.LinearPointCountScaleExpression));
             //Precalculate arc angle values for cell polygon generation.
             var arcAngles = self._getArcAngles(options.gridType);
             var sqrt3 = Math.sqrt(3);
@@ -960,7 +960,7 @@ MIT License
                 //Calculate the cubic coordinate for the data bin that contains the points pixel coordinate.
                 self._getCellCoord(pixel, width, height, options.gridType, coord, sqrt3);
                 //Create a unique id for the bin using the x, y and z, parameters of the cubic coordinate.
-                var cellId = "x" + coord.col + "y" + coord.row + "z" + coord.z;
+                var cellId = "x".concat(coord.col, "y").concat(coord.row, "z").concat(coord.z);
                 var cell = self._getGridCell(cellId, coord, i, gridInfo, width, height, options.gridType, hasAggregates);
                 //Calculate aggregates and metrics for cell.
                 self._incrementCellInfo(cell.properties, points[i], options.aggregateProperties, mapExpressions);
@@ -979,7 +979,7 @@ MIT License
         GridMath.recalculateCoords = function (gridInfo, options) {
             var self = this;
             //Parse the scale expression.
-            var scaleExpression = Expression.parse(options.scaleExpression || self.LinearPointCountScaleExpression);
+            var scaleExpression = Expression.parse((options.scaleExpression || self.LinearPointCountScaleExpression));
             var minCellWidth = azmaps.math.convertDistance(Math.min(options.minCellWidth, options.cellWidth), options.distanceUnits, 'meters') / self._getGroundResolutionZ22(options.centerLatitude);
             for (var i = 0, len = gridInfo.cells.length; i < len; i++) {
                 gridInfo.cells[i].geometry.coordinates = self.createGridPolygon(gridInfo.cells[i].properties, options, gridInfo.width, gridInfo.height, self._getArcAngles(options.gridType), minCellWidth, scaleExpression, gridInfo.scaleMetrics);
@@ -1381,10 +1381,10 @@ MIT License
             //Generate an abbreviated version of the point count.
             var abbrv = count.toString();
             if (count >= 1000000) {
-                abbrv = Math.round(count / 1000000) + "M";
+                abbrv = "".concat(Math.round(count / 1000000), "M");
             }
             else if (count >= 1000) {
-                abbrv = Math.round(count / 1000) + "k";
+                abbrv = "".concat(Math.round(count / 1000), "k");
             }
             cellInfo.point_count_abbreviated = abbrv;
             var scaleVal = count;
