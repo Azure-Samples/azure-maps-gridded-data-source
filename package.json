@@ -35,7 +35,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-uglify": "^6.0.4",
     "tslint": "^5.15.0",
-    "typescript": "^3.8.3",
+    "typescript": "^5.5.4",
     "yargs": "^13.3.2"
   },
   "files": [
