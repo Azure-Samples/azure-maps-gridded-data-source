@@ -1,13 +1,31 @@
----
-page_type: sample
-description: A module for the Azure Maps Web SDK that provides a data source that clusters data points into cells of a grid area.
-languages:
-- javascript
-- typescript
-products:
-- azure
-- azure-maps
----
+<table>
+  <thead>
+    <tr>
+      <th>page_type</th>
+      <th>description</th>
+      <th>languages</th>
+      <th>products</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>sample</td>
+      <td>A module for the Azure Maps Web SDK that provides a data source that clusters data points into cells of a grid area.</td>
+      <td>
+          <ul>
+              <li>javascript</li>
+              <li>typescript</li>
+          </ul>
+      </td>
+      <td>
+          <ul>
+              <li>azure</li>
+              <li>azure-maps</li>
+          </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 # Azure Maps Gridded Data Source module
 
