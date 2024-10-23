@@ -1,30 +1,3 @@
-<table style="width: 100%; border-collapse: collapse; border: 1px solid #333;">
-    <thead>
-        <tr>
-            <th style="padding: 10px; border: 1px solid #333;">page_type</th>
-            <th style="padding: 10px; border: 1px solid #333;">description</th>
-            <th style="padding: 10px; border: 1px solid #333;">languages</th>
-            <th style="padding: 10px; border: 1px solid #333;">products</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #333;">sample</td>
-            <td style="padding: 10px; border: 1px solid #333;">A module for the Azure Maps Web SDK that provides a data source that clusters data points into cells of a grid area.</td>
-            <td style="padding: 10px; border: 1px solid #333;">
-                <code>javascript</code>
-                <br>
-                <code>typescript</code>
-            </td>
-            <td style="padding: 10px; border: 1px solid #333;">
-                <code>azure</code>
-                <br>
-                <code>azure-maps</code>
-            </td>
-        </tr>
-    </tbody>
-</table>
-
 # Azure Maps Gridded Data Source module
 
 A module for the Azure Maps Web SDK that provides a data source that clusters data points into cells of a grid area.
